@@ -1,0 +1,21 @@
+services:
+    app:
+        build: .
+        environment:
+            - DB_HOST=mongo
+            - DB_USER=admin
+            - DB_PASS=admin
+            - DB_NAME=contacts
+        ports:
+            - "3000:3000"
+        depends_on:
+            - mongo
+    mongo:
+        image: mongo:8
+        restart: no
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: admin
+            MONGO_INITDB_ROOT_PASSWORD: admin
+            MONGO_INITDB_DATABASE: contacts
+        ports:
+            -   "27017:27017"

@@ -2,6 +2,7 @@ package io.github.svbgabriel.infrastructure.persistence
 
 import io.github.svbgabriel.domain.model.Contact
 import io.github.svbgabriel.domain.repository.ContactRepository
+import io.github.svbgabriel.infrastructure.externals.javascript.deleteProperty
 import kotlinx.coroutines.await
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -27,7 +28,7 @@ class ContactRepositoryImpl : ContactRepository {
         val contactDynamic = jsonSerializer.encodeToDynamic(contact)
         // Ensure _id is removed if null/undefined, so Mongoose generates it
         if (contactDynamic._id == null) {
-            js("delete contactDynamic._id")
+            deleteProperty(contactDynamic, "_id")
         }
 
         val result = ContactModel.create(contactDynamic).await()
@@ -38,7 +39,7 @@ class ContactRepositoryImpl : ContactRepository {
         val contactDynamic = jsonSerializer.encodeToDynamic(contact)
         // Ensure _id is removed if null/undefined
         if (contactDynamic._id == null) {
-            js("delete contactDynamic._id")
+            deleteProperty(contactDynamic, "_id")
         }
 
         val result = ContactModel.updateOne(json("_id" to id), contactDynamic).await()

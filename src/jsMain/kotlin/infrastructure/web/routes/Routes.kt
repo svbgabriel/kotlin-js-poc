@@ -26,7 +26,7 @@ fun ExpressApplication.configureRoutes(
     }
 
     route("/api/contacts")
-        .get(asyncHandler(scope) { req, res -> controller.select(req, res) })
+        .get(asyncHandler(scope) { _, res -> controller.select(res) })
         .post(asyncHandler(scope) { req, res -> controller.insert(req, res) })
 
     route("/api/contacts/:id")

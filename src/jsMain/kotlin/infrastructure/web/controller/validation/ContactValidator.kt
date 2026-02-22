@@ -1,8 +1,8 @@
 package io.github.svbgabriel.infrastructure.web.controller.validation
 
-import io.github.svbgabriel.infrastructure.web.controller.dto.CreateContactRequest
-import io.github.svbgabriel.infrastructure.web.controller.dto.UpdateContactRequest
 import io.github.svbgabriel.infrastructure.web.BadRequestException
+import io.github.svbgabriel.infrastructure.web.controller.dto.request.CreateContactRequest
+import io.github.svbgabriel.infrastructure.web.controller.dto.request.UpdateContactRequest
 
 object ContactValidator {
     private val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$".toRegex()

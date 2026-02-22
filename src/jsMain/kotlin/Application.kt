@@ -31,7 +31,7 @@ class App : KoinComponent {
 
     private fun middleware() {
         app.use(expressMiddleware.json())
-        app.use(expressMiddleware.urlencoded(ExpressUrlEncodedOptions(extended = true)))
+        app.use(expressMiddleware.urlencoded(options = ExpressUrlEncodedOptions(extended = true)))
     }
 }
 

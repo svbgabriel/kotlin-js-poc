@@ -167,6 +167,7 @@ This PoC identifies several areas where the development experience and code qual
 *   **Documentation:** Add a way to document the project using Javadoc-like comments and generate documentation with Dokka.
 *   **CI/CD Pipeline:** Set up GitHub Actions to build, lint, and test the application automatically on every push, ensuring the Kotlin-to-JS compilation chain remains stable.
 *   **Integration Testing:** Expand the test suite to include integration tests that spin up a real MongoDB instance (e.g., using Docker) to verify the data access layer thoroughly.
+*   **Observability:** Implement logging and monitoring using a library like Logback and OpenTelemetry to track application health and performance metrics.
 
 ---
 *This project serves as a knowledge base for migrations or new projects wishing to leverage Kotlin in the Server-side JavaScript environment.*

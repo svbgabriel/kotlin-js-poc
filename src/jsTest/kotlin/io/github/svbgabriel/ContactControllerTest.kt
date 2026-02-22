@@ -1,7 +1,7 @@
 package io.github.svbgabriel
 
 import io.github.svbgabriel.infrastructure.web.controller.ContactController
-import io.github.svbgabriel.infrastructure.web.controller.dto.CreateContactRequest
+import io.github.svbgabriel.infrastructure.web.controller.dto.request.CreateContactRequest
 import io.github.svbgabriel.domain.model.Contact
 import io.github.svbgabriel.infrastructure.web.BadRequestException
 import io.github.svbgabriel.infrastructure.web.HttpStatus
@@ -24,10 +24,9 @@ class ContactControllerTest : FunSpec({
         service.findAllResult = expectedData
 
         val controller = ContactController(service)
-        val req = MockRequest()
         val res = MockResponse()
 
-        controller.select(req, res)
+        controller.select(res)
 
         res.statusCode shouldBe HttpStatus.OK.statusCode
         val resultDynamic = res.jsonBody.result
@@ -43,11 +42,10 @@ class ContactControllerTest : FunSpec({
         service.shouldFail = true
 
         val controller = ContactController(service)
-        val req = MockRequest()
         val res = MockResponse()
 
         shouldThrow<Exception> {
-            controller.select(req, res)
+            controller.select(res)
         }
     }
 

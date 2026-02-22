@@ -1,13 +1,13 @@
 package io.github.svbgabriel.infrastructure.web.controller
 
-import io.github.svbgabriel.infrastructure.web.controller.dto.CreateContactRequest
-import io.github.svbgabriel.infrastructure.web.controller.dto.UpdateContactRequest
-import io.github.svbgabriel.infrastructure.web.controller.dto.toResponse
 import io.github.svbgabriel.infrastructure.web.controller.validation.ContactValidator
 import io.github.svbgabriel.infrastructure.externals.express.Request
 import io.github.svbgabriel.infrastructure.externals.express.Response
 import io.github.svbgabriel.infrastructure.web.HttpStatus
 import io.github.svbgabriel.domain.service.ContactService
+import io.github.svbgabriel.infrastructure.web.controller.dto.request.CreateContactRequest
+import io.github.svbgabriel.infrastructure.web.controller.dto.request.UpdateContactRequest
+import io.github.svbgabriel.infrastructure.web.controller.dto.response.ContactResponse
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromDynamic
@@ -19,9 +19,9 @@ class ContactController(private val service: ContactService) {
 
     private val jsonSerializer = Json
 
-    suspend fun select(req: Request, res: Response) {
+    suspend fun select(res: Response) {
         val result = service.findAll()
-            .map { jsonSerializer.encodeToDynamic(it.toResponse()) }
+            .map { jsonSerializer.encodeToDynamic(ContactResponse.fromDomain(it)) }
             .toTypedArray()
 
         res.status(HttpStatus.OK.statusCode).json(json("result" to result))
@@ -31,7 +31,7 @@ class ContactController(private val service: ContactService) {
         val id = req.params.id as String
         val result = service.findById(id)
         if (result != null) {
-            val responseDynamic = jsonSerializer.encodeToDynamic(result.toResponse())
+            val responseDynamic = jsonSerializer.encodeToDynamic(ContactResponse.fromDomain(result))
             res.status(HttpStatus.OK.statusCode).json(json("result" to responseDynamic))
         } else {
             res.status(HttpStatus.NOT_FOUND.statusCode).json(json("result" to HttpStatus.NOT_FOUND.description))
@@ -44,7 +44,7 @@ class ContactController(private val service: ContactService) {
         val contactInput = request.toDomain()
 
         val result = service.create(contactInput)
-        val responseDynamic = jsonSerializer.encodeToDynamic(result.toResponse())
+        val responseDynamic = jsonSerializer.encodeToDynamic(ContactResponse.fromDomain(result))
         res.status(HttpStatus.CREATED.statusCode).json(json("result" to responseDynamic))
     }
 

@@ -28,7 +28,7 @@ class ContactController(private val service: ContactService) {
     }
 
     suspend fun selectOne(req: Request, res: Response) {
-        val id = req.params.id as String
+        val id = req.params["id"].toString()
         val result = service.findById(id)
         if (result != null) {
             val responseDynamic = jsonSerializer.encodeToDynamic(ContactResponse.fromDomain(result))
@@ -49,7 +49,7 @@ class ContactController(private val service: ContactService) {
     }
 
     suspend fun update(req: Request, res: Response) {
-        val id = req.params.id as String
+        val id = req.params["id"].toString()
         val request = jsonSerializer.decodeFromDynamic<UpdateContactRequest>(req.body)
         ContactValidator.validate(request)
         val contactInput = request.toDomain(id)
@@ -63,7 +63,7 @@ class ContactController(private val service: ContactService) {
     }
 
     suspend fun delete(req: Request, res: Response) {
-        val id = req.params.id as String
+        val id = req.params["id"].toString()
         val result = service.delete(id)
         if (result) {
             res.status(HttpStatus.NO_CONTENT.statusCode).send(body = null)

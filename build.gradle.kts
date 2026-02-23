@@ -25,6 +25,7 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.coroutines)
             implementation(libs.koin.core)
+            implementation(libs.konform)
         }
         commonTest.dependencies {
             implementation(libs.kotest.framework.engine)

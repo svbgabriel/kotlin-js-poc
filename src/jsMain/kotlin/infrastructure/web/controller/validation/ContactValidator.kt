@@ -3,47 +3,56 @@ package io.github.svbgabriel.infrastructure.web.controller.validation
 import io.github.svbgabriel.infrastructure.web.BadRequestException
 import io.github.svbgabriel.infrastructure.web.controller.dto.request.CreateContactRequest
 import io.github.svbgabriel.infrastructure.web.controller.dto.request.UpdateContactRequest
+import io.konform.validation.Validation
+import io.konform.validation.constraints.notBlank
+import io.konform.validation.constraints.pattern
 
 object ContactValidator {
     private val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$".toRegex()
 
-    fun validate(request: CreateContactRequest) {
-        val errors = mutableListOf<String>()
+    private val validateCreateContactRequest = Validation {
+        CreateContactRequest::name {
+            notBlank() hint "name cannot be blank"
+        }
+        CreateContactRequest::nickname {
+            notBlank() hint "nickname cannot be blank"
+        }
+        CreateContactRequest::email {
+            notBlank() hint "email cannot be blank"
+            pattern(emailRegex) hint "Invalid e-mail format"
+        }
+    }
 
-        if (request.name.isBlank()) {
-            errors.add("Name cannot be blank")
+    private val validateUpdateContactRequest = Validation {
+        UpdateContactRequest::name {
+            notBlank() hint "name cannot be blank"
         }
-        if (request.nickname.isBlank()) {
-            errors.add("Nickname cannot be blank")
+        UpdateContactRequest::nickname {
+            notBlank() hint "nickname cannot be blank"
         }
-        if (request.email.isBlank()) {
-            errors.add("Email cannot be blank")
-        } else if (!emailRegex.matches(request.email)) {
-            errors.add("Invalid email format")
+        UpdateContactRequest::email {
+            notBlank() hint "email cannot be blank"
+            pattern(emailRegex) hint "Invalid e-mail format"
         }
+    }
+
+    private fun <T> validate(validation: Validation<T>, payload: T) {
+        val errors = validation(payload)
+            .takeUnless { it.isValid }
+            ?.errors
+            ?.map { it.message }
+            ?: emptyList()
 
         if (errors.isNotEmpty()) {
             throw BadRequestException(errors.joinToString(", "))
         }
     }
 
+    fun validate(request: CreateContactRequest) {
+        validate(validateCreateContactRequest, request)
+    }
+
     fun validate(request: UpdateContactRequest) {
-        val errors = mutableListOf<String>()
-
-        if (request.name.isBlank()) {
-            errors.add("Name cannot be blank")
-        }
-        if (request.nickname.isBlank()) {
-            errors.add("Nickname cannot be blank")
-        }
-        if (request.email.isBlank()) {
-            errors.add("Email cannot be blank")
-        } else if (!emailRegex.matches(request.email)) {
-            errors.add("Invalid email format")
-        }
-
-        if (errors.isNotEmpty()) {
-            throw BadRequestException(errors.joinToString(", "))
-        }
+        validate(validateUpdateContactRequest, request)
     }
 }

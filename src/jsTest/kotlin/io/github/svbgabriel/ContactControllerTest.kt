@@ -99,7 +99,7 @@ class ContactControllerTest : FunSpec({
         val exception = shouldThrow<BadRequestException> {
             controller.insert(req, res)
         }
-        exception.message shouldBe "Name cannot be blank, Invalid email format"
+        exception.message shouldBe "name cannot be blank, Invalid e-mail format"
     }
 })
 

@@ -157,17 +157,19 @@ curl -X DELETE http://localhost:3000/api/contacts/:id
 
 ## 🔮 Possible Improvements
 
-This PoC identifies several areas where the development experience and code quality could be enhanced:
+This PoC identifies several areas where the development experience and code quality could be enhanced, remaining strictly within the **KotlinJS (Node.js)** ecosystem:
 
-*   **Automated Wrapper Generation:** Investigate tools to generate Kotlin external declarations from TypeScript Definition files (`.d.ts`) to significantly reduce manual effort in maintaining `infrastructure/externals`. (e.g., Karakum)
-*   **Enhanced Type Safety:** Reduce the usage of `dynamic` types in the Express/Mongoose wrappers by defining more strict interfaces, potentially leveraging Kotlin's sealed classes or value classes.
-*   **Global Error Handling:** Implement dedicated Express middleware to catch exceptions globally and map them to appropriate HTTP status codes, removing the need for repetitive try/catch blocks or manual error statuses in controllers.
-*   **Validation Library:** Integrate a Kotlin Multiplatform validation library (e.g., Konform) to replace the manual `ContactValidator` logic with a declarative approach.
-*   **Standardized Serialization:** Create a unified abstraction for `JSON <-> Object` conversion to verify `encodeToDynamic`/`json()` calls are consistent and to handle edge cases (like `_id` generation) in a single place.
-*   **Documentation:** Add a way to document the project using Javadoc-like comments and generate documentation with Dokka.
-*   **CI/CD Pipeline:** Set up GitHub Actions to build, lint, and test the application automatically on every push, ensuring the Kotlin-to-JS compilation chain remains stable.
-*   **Integration Testing:** Expand the test suite to include integration tests that spin up a real MongoDB instance (e.g., using Docker) to verify the data access layer thoroughly.
-*   **Observability:** Implement logging and monitoring using a library like Logback and OpenTelemetry to track application health and performance metrics.
+- [ ] **Automated Wrapper Generation:** Investigate tools to generate Kotlin external declarations from TypeScript Definition files (`.d.ts`) to significantly reduce manual effort in maintaining `infrastructure/externals` (e.g., Karakum or Dukat).
+- [ ] **Lightweight JS Frameworks (Alternative to Express):** Explore wrapping faster, modern Node.js frameworks like **Fastify** or **Hono** to compare performance and interoperability ease against Express.
+- [ ] **Native MongoDB Driver:** Evaluate replacing Mongoose with wrappers for the official `mongodb` Node.js driver. This could reduce the overhead of Mongoose's object mapping and provide a more direct, potentially more type-safe data access layer.
+- [ ] **Enhanced Type Safety:** Reduce the usage of `dynamic` types in the current Express/Mongoose wrappers by defining more strict external interfaces, potentially leveraging Kotlin's sealed classes or value classes.
+- [ ] **Global Error Handling:** Implement dedicated Express middleware to catch exceptions globally and map them to appropriate HTTP status codes, removing the need for repetitive try/catch blocks or manual error statuses in controllers.
+- [X] **Validation Library:** Integrate a Kotlin Multiplatform validation library (e.g., Konform) to replace the manual `ContactValidator` logic with a declarative approach.
+- [ ] **Standardized Serialization:** Create a unified abstraction for `JSON <-> Object` conversion to verify `encodeToDynamic`/`json()` calls are consistent and to handle edge cases (like `_id` generation) in a single place.
+- [ ] **Documentation:** Add a way to document the project using Javadoc-like comments and generate documentation with Dokka.
+- [ ] **CI/CD Pipeline:** Set up GitHub Actions to build, lint, and test the application automatically on every push, ensuring the Kotlin-to-JS compilation chain remains stable.
+- [ ] **Integration Testing:** Expand the test suite to include integration tests that spin up a real MongoDB instance to verify the data access layer thoroughly.
+- [ ] **Observability:** Implement logging and monitoring using a Node.js compatible library like OpenTelemetry (via JS wrappers) to track application health and performance metrics.
 
 ---
 *This project serves as a knowledge base for migrations or new projects wishing to leverage Kotlin in the Server-side JavaScript environment.*

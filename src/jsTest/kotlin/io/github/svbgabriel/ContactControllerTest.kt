@@ -29,7 +29,7 @@ class ContactControllerTest : FunSpec({
         controller.select(res)
 
         res.statusCode shouldBe HttpStatus.OK.statusCode
-        val resultDynamic = res.jsonBody.result
+        val resultDynamic = res.jsonBody
         // resultDynamic is Array<dynamic> (plain JS objects)
         val resultList = jsonSerializer.decodeFromDynamic<List<ContactResponseTest>>(resultDynamic)
 
@@ -76,7 +76,7 @@ class ContactControllerTest : FunSpec({
         res.statusCode shouldBe HttpStatus.CREATED.statusCode
         // We need to cast or decode the result properly
         // res.jsonBody is { result: ... }
-        val resultDynamic = res.jsonBody.result
+        val resultDynamic = res.jsonBody
         val result = jsonSerializer.decodeFromDynamic<ContactResponseTest>(resultDynamic)
 
         result.id shouldBe "newId"

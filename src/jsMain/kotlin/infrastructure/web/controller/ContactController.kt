@@ -31,7 +31,7 @@ class ContactController(private val service: ContactService) {
             val response = ContactResponse.fromDomain(result)
             res.sendJson(HttpStatus.OK, response)
         } else {
-            res.sendJson(HttpStatus.NOT_FOUND, ErrorResponse("Contact not found"))
+            res.sendJson(HttpStatus.NOT_FOUND, ErrorResponse(CONTACT_NOT_FOUND))
         }
     }
 
@@ -55,7 +55,7 @@ class ContactController(private val service: ContactService) {
         if (updated) {
             res.sendNoContent()
         } else {
-            res.sendJson(HttpStatus.NOT_FOUND, ErrorResponse("Contact not found"))
+            res.sendJson(HttpStatus.NOT_FOUND, ErrorResponse(CONTACT_NOT_FOUND))
         }
     }
 
@@ -66,7 +66,11 @@ class ContactController(private val service: ContactService) {
         if (result) {
             res.sendNoContent()
         } else {
-            res.sendJson(HttpStatus.NOT_FOUND, ErrorResponse("Contact not found"))
+            res.sendJson(HttpStatus.NOT_FOUND, ErrorResponse(CONTACT_NOT_FOUND))
         }
+    }
+
+    companion object {
+        private const val CONTACT_NOT_FOUND = "Contact not found"
     }
 }

@@ -2,37 +2,46 @@ package io.github.svbgabriel.infrastructure.persistence
 
 import io.github.svbgabriel.infrastructure.database.mongooseVal
 import io.github.svbgabriel.infrastructure.externals.mongoose.Model
-import kotlin.js.json
+import io.github.svbgabriel.infrastructure.externals.mongoose.SchemaOptions
+import io.github.svbgabriel.infrastructure.externals.mongoose.SchemaTypeOptions
+import kotlinx.js.JsPlainObject
 
-private fun newSchema(ctor: dynamic, definition: dynamic, options: dynamic): dynamic =
+private fun newSchema(ctor: Any, definition: Any, options: Any?): Any =
     js("new ctor(definition, options)")
 
-private fun createSchema(definition: dynamic, options: dynamic = json()): dynamic {
+private fun createSchema(definition: ContactSchemaDefinition, options: SchemaOptions): Any {
     return newSchema(mongooseVal.Schema, definition, options)
 }
 
-private fun <T> defineModel(name: String, schema: dynamic): Model<T> {
+private fun <T> defineModel(name: String, schema: Any): Model<T> {
     return (mongooseVal.model(name, schema) as Any).unsafeCast<Model<T>>()
 }
 
+@JsPlainObject
+external interface ContactSchemaDefinition {
+    val name: SchemaTypeOptions
+    val nickname: SchemaTypeOptions
+    val email: SchemaTypeOptions
+}
+
 val contactSchema = createSchema(
-    json(
-        "name" to json(
-            "type" to "String",
-            "required" to true
+    ContactSchemaDefinition(
+        name = SchemaTypeOptions(
+            type = "String",
+            required = true
         ),
-        "nickname" to json(
-            "type" to "String",
-            "required" to true,
-            "unique" to true
+        nickname = SchemaTypeOptions(
+            type = "String",
+            required = true,
+            unique = true
         ),
-        "email" to json(
-            "type" to "String",
-            "required" to true,
-            "unique" to true
+        email = SchemaTypeOptions(
+            type = "String",
+            required = true,
+            unique = true
         )
     ),
-    json("timestamps" to true)
+    SchemaOptions(timestamps = true)
 )
 
 val ContactModel = defineModel<ContactEntity>("Contact", contactSchema)

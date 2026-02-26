@@ -9,6 +9,7 @@ import io.github.svbgabriel.infrastructure.externals.express.expressApplication
 import io.github.svbgabriel.infrastructure.externals.express.expressMiddleware
 import io.github.svbgabriel.infrastructure.logging.LoggerFactory
 import io.github.svbgabriel.infrastructure.web.routes.configureRoutes
+import io.github.svbgabriel.infrastructure.externals.node.process
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -36,11 +37,22 @@ class App : KoinComponent {
 }
 
 fun main() {
+    val logger = LoggerFactory.getLogger("Application")
+
+    process.on("uncaughtException") { err, _ ->
+        logger.error("Uncaught Exception: ", err)
+        process.exit(1)
+    }
+
+    process.on("unhandledRejection") { reason, promise ->
+        logger.error("Unhandled Rejection at promise: ", promise)
+        logger.error("Reason: ", reason)
+    }
+
     startKoin {
         modules(appModule)
     }
     val serverPort = Configuration.serverPort
-    val logger = LoggerFactory.getLogger("Application")
 
     val application = App()
     application.app.listen(serverPort) {

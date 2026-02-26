@@ -6,7 +6,7 @@ import kotlin.js.Date
 
 @JsPlainObject
 external interface ContactEntity {
-    val _id: Any
+    val _id: Any?
     val name: String
     val nickname: String
     val email: String
@@ -35,5 +35,15 @@ fun ContactEntity.toDomain(): Contact {
         email = this.email,
         createdAt = createdAtStr,
         updatedAt = updatedAtStr
+    )
+}
+
+fun Contact.toInputEntity(): ContactEntity {
+    return ContactEntity(
+        name = this.name,
+        nickname = this.nickname,
+        email = this.email,
+        createdAt = this.createdAt,
+        updatedAt = this.updatedAt
     )
 }

@@ -2,17 +2,10 @@ package io.github.svbgabriel.infrastructure.persistence
 
 import io.github.svbgabriel.domain.model.Contact
 import io.github.svbgabriel.domain.repository.ContactRepository
-import io.github.svbgabriel.infrastructure.externals.javascript.deleteProperty
 import kotlinx.coroutines.await
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.encodeToDynamic
 import kotlin.js.json
 
-@OptIn(ExperimentalSerializationApi::class)
 class ContactRepositoryImpl : ContactRepository {
-
-    private val jsonSerializer = Json { ignoreUnknownKeys = true }
 
     override suspend fun findAll(): Array<Contact> {
         val result = ContactModel.find(json()).lean().exec().await()
@@ -25,24 +18,16 @@ class ContactRepositoryImpl : ContactRepository {
     }
 
     override suspend fun create(contact: Contact): Contact {
-        val contactDynamic = jsonSerializer.encodeToDynamic(contact)
-        // Ensure _id is removed if null/undefined, so Mongoose generates it
-        if (contactDynamic._id == null) {
-            deleteProperty(contactDynamic, "_id")
-        }
+        val newContact = contact.toInputEntity()
 
-        val result = ContactModel.create(contactDynamic).await()
+        val result = ContactModel.create(newContact).await()
         return result.toDomain()
     }
 
     override suspend fun update(id: String, contact: Contact): Boolean {
-        val contactDynamic = jsonSerializer.encodeToDynamic(contact)
-        // Ensure _id is removed if null/undefined
-        if (contactDynamic._id == null) {
-            deleteProperty(contactDynamic, "_id")
-        }
+        val contactToUpdate = contact.toInputEntity()
 
-        val result = ContactModel.updateOne(json("_id" to id), contactDynamic).await()
+        val result = ContactModel.updateOne(json("_id" to id), contactToUpdate).await()
         return result.matchedCount > 0
     }
 

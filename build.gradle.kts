@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlinx.jsPlainObjects)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotest)
+    alias(libs.plugins.mokkery)
 }
 
 group = "io.github.svbgabriel"

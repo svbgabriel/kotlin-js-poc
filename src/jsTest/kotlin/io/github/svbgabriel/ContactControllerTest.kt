@@ -1,10 +1,17 @@
 package io.github.svbgabriel
 
+import dev.mokkery.answering.returns
+import dev.mokkery.answering.throws
+import dev.mokkery.everySuspend
+import dev.mokkery.matcher.any
+import dev.mokkery.mock
 import io.github.svbgabriel.infrastructure.web.controller.ContactController
 import io.github.svbgabriel.infrastructure.web.controller.dto.request.CreateContactRequest
 import io.github.svbgabriel.domain.model.Contact
+import io.github.svbgabriel.domain.service.ContactService
 import io.github.svbgabriel.infrastructure.web.BadRequestException
 import io.github.svbgabriel.infrastructure.web.HttpStatus
+import io.github.svbgabriel.infrastructure.web.controller.dto.response.ContactResponse
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
@@ -19,9 +26,9 @@ class ContactControllerTest : FunSpec({
     val jsonSerializer = Json { ignoreUnknownKeys = true }
 
     test("testSelectSuccess") {
-        val service = MockContactService()
+        val service = mock<ContactService>()
         val expectedData = arrayOf(Contact(id = "1", name = "Contact 1", nickname = "C1", email = "test@example.com"))
-        service.findAllResult = expectedData
+        everySuspend { service.findAll() } returns expectedData
 
         val controller = ContactController(service)
         val res = MockResponse()
@@ -31,15 +38,16 @@ class ContactControllerTest : FunSpec({
         res.statusCode shouldBe HttpStatus.OK.statusCode
         val resultDynamic = res.jsonBody
         // resultDynamic is Array<dynamic> (plain JS objects)
-        val resultList = jsonSerializer.decodeFromDynamic<List<ContactResponseTest>>(resultDynamic)
+        val resultList = jsonSerializer.decodeFromDynamic<List<ContactResponse>>(resultDynamic)
 
         resultList.size shouldBe 1
         resultList[0].name shouldBe "Contact 1"
     }
 
     test("testSelectFailure") {
-        val service = MockContactService()
-        service.shouldFail = true
+        val service = mock<ContactService>()
+
+        everySuspend { service.findAll() } throws Exception("Service error")
 
         val controller = ContactController(service)
         val res = MockResponse()
@@ -50,7 +58,7 @@ class ContactControllerTest : FunSpec({
     }
 
     test("testInsertSuccess") {
-        val service = MockContactService()
+        val service = mock<ContactService>()
         val inputRequest = CreateContactRequest(
             name = "New Contact",
             nickname = "NC",
@@ -65,7 +73,7 @@ class ContactControllerTest : FunSpec({
             email = "new.contact@example.com"
         )
 
-        service.createResult = expectedContact
+        everySuspend { service.create(any()) } returns expectedContact
 
         val controller = ContactController(service)
         val req = MockRequest(body = inputDynamic)
@@ -77,14 +85,14 @@ class ContactControllerTest : FunSpec({
         // We need to cast or decode the result properly
         // res.jsonBody is { result: ... }
         val resultDynamic = res.jsonBody
-        val result = jsonSerializer.decodeFromDynamic<ContactResponseTest>(resultDynamic)
+        val result = jsonSerializer.decodeFromDynamic<ContactResponse>(resultDynamic)
 
         result.id shouldBe "newId"
         result.name shouldBe "New Contact"
     }
 
     test("testInsertValidationFailure") {
-        val service = MockContactService()
+        val service = mock<ContactService>()
         val inputRequest = CreateContactRequest(
             name = "", // Invalid name
             nickname = "NC",
@@ -102,6 +110,3 @@ class ContactControllerTest : FunSpec({
         exception.message shouldBe "name cannot be blank, Invalid e-mail format"
     }
 })
-
-@kotlinx.serialization.Serializable
-data class ContactResponseTest(val id: String, val name: String, val nickname: String, val email: String)

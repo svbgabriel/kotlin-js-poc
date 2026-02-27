@@ -4,6 +4,11 @@ import io.github.svbgabriel.infrastructure.externals.express.Request
 import io.github.svbgabriel.infrastructure.externals.express.Response
 import kotlin.js.json
 
+/**
+ * Mock implementation of Express Request, required because Mokkery cannot
+ * currently mock JS external interfaces containing kotlin.js.Json properties
+ * without throwing runtime ReferenceErrors.
+ */
 class MockRequest(
     override val params: dynamic = json(),
     override val body: dynamic = json(),
@@ -11,6 +16,9 @@ class MockRequest(
     override val headers: dynamic = json()
 ) : Request
 
+/**
+ * Mock implementation of Express Response.
+ */
 class MockResponse : Response {
     var statusCode: Int = 0
     var jsonBody: dynamic = null
@@ -32,7 +40,6 @@ class MockResponse : Response {
     }
 
     override fun set(field: String, vararg value: String): Response {
-        // Mock set
         return this
     }
 }

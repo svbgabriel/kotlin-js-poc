@@ -1,3 +1,7 @@
+import org.jetbrains.kotlin.gradle.dsl.KotlinJsCompile
+import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin
+import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
+
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlinx.serialization)
@@ -10,6 +14,11 @@ plugins {
 group = "io.github.svbgabriel"
 version = "1.0.0"
 
+// Improve security by disabling automatic scripts execution (--ignore-scripts)
+rootProject.plugins.withType<YarnPlugin> {
+    rootProject.the<YarnRootExtension>().ignoreScripts = false
+}
+
 kotlin {
     js {
         nodejs {}
@@ -17,6 +26,8 @@ kotlin {
         binaries.executable()
 
         compilerOptions {
+            // Generating source maps to enable debug
+            sourceMap = true
             optIn.add("kotlin.js.ExperimentalJsExport")
         }
     }
@@ -37,5 +48,11 @@ kotlin {
             implementation(npm("express", "^5.2.1"))
             implementation(npm("mongoose", "^9.2.1"))
         }
+    }
+}
+
+tasks.withType<KotlinJsCompile>().configureEach {
+    compilerOptions {
+        target = "es2015"
     }
 }

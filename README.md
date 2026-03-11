@@ -34,7 +34,7 @@ Ensure you have a MongoDB instance running locally or adjust the connection stri
 
 2.  **Run the application in development mode:**
     ```bash
-    ./gradlew jsNodeDevelopmentRun
+    ./gradlew jsNodeDevelopmentRun --continuous
     ```
     This will start the Node.js server compiled from Kotlin.
 
@@ -155,21 +155,30 @@ Replace `:id` with the actual ID.
 curl -X DELETE http://localhost:3000/api/contacts/:id
 ```
 
-## 🔮 Possible Improvements
+## 🔮 Possible Improvements (Next Steps)
 
-This PoC identifies several areas where the development experience and code quality could be enhanced, remaining strictly within the **KotlinJS (Node.js)** ecosystem:
+This PoC identifies several areas where the development experience and code quality could be enhanced to truly validate KotlinJS as a viable alternative. The next steps are categorized by their impact:
 
-- [ ] **Automated Wrapper Generation:** Investigate tools to generate Kotlin external declarations from TypeScript Definition files (`.d.ts`) to significantly reduce manual effort in maintaining `infrastructure/externals` (e.g., Karakum or Dukat).
-- [ ] **Lightweight JS Frameworks (Alternative to Express):** Explore wrapping faster, modern Node.js frameworks like **Fastify** or **Hono** to compare performance and interoperability ease against Express.
-- [ ] **Native MongoDB Driver:** Evaluate replacing Mongoose with wrappers for the official `mongodb` Node.js driver. This could reduce the overhead of Mongoose's object mapping and provide a more direct, potentially more type-safe data access layer.
-- [ ] **Enhanced Type Safety:** Reduce the usage of `dynamic` types in the current Express/Mongoose wrappers by defining more strict external interfaces, potentially leveraging Kotlin's sealed classes or value classes.
-- [X] **Global Error Handling:** Implement dedicated Express middleware to catch exceptions globally and map them to appropriate HTTP status codes, removing the need for repetitive try/catch blocks or manual error statuses in controllers.
-- [X] **Validation Library:** Integrate a Kotlin Multiplatform validation library (e.g., Konform) to replace the manual `ContactValidator` logic with a declarative approach.
-- [ ] **Standardized Serialization:** Create a unified abstraction for `JSON <-> Object` conversion to verify `encodeToDynamic`/`json()` calls are consistent and to handle edge cases (like `_id` generation) in a single place.
-- [ ] **Serverless & Edge Environments (Bun/Deno/Cloudflare):** Evaluate compiling to Wasm or strict ESM to run the backend in alternative JS runtimes like Bun, Deno, or Edge computing (Cloudflare Workers).
-- [ ] **Documentation:** Add a way to document the project using KDoc comments and generate documentation with Dokka.
+### 🛠️ Developer Experience (DX) & Tooling
+- [ ] **Hot Reloading (Fast Feedback Loop):** Configure a workflow (e.g., combining Gradle continuous build `./gradlew -t build` with `nodemon`) to match the quick restart experience of TypeScript (`tsx watch`).
+- [ ] **Debugging & Source Maps:** Ensure source maps are correctly configured and test debugging the Node.js process directly from IntelliJ IDEA or VSCode, with breakpoints hitting the `.kt` files.
 - [ ] **CI/CD Pipeline:** Set up GitHub Actions to build, lint, and test the application automatically on every push, ensuring the Kotlin-to-JS compilation chain remains stable.
-- [ ] **Integration Testing:** Expand the test suite to include integration tests that spin up a real MongoDB instance to verify the data access layer thoroughly.
+- [ ] **Documentation:** Add a way to document the project using KDoc comments and generate documentation with Dokka.
+
+### 🌉 Interoperability & Type Safety
+- [ ] **Automated Wrapper Generation:** Investigate tools to generate Kotlin external declarations from TypeScript Definition files (`.d.ts`) to significantly reduce manual effort in maintaining `infrastructure/externals` (e.g., Karakum).
+- [ ] **Enhanced Type Safety:** Reduce the usage of `dynamic` types in the current Express/Mongoose wrappers by defining more strict external interfaces, potentially leveraging Kotlin's sealed classes.
+- [ ] **Standardized Serialization:** Create a unified abstraction for `JSON <-> Object` conversion to verify `encodeToDynamic`/`json()` calls are consistent and to handle edge cases (like `_id` generation) in a single place.
+
+### 🏗️ Architecture & Testing
+- [ ] **Integration Testing (Testcontainers):** Expand the test suite to include integration tests that spin up a real MongoDB instance (e.g., via Testcontainers for Node) to verify the data access layer thoroughly.
+- [ ] **Native MongoDB Driver:** Evaluate replacing Mongoose with wrappers for the official `mongodb` Node.js driver. This could reduce the overhead of Mongoose's object mapping and provide a more direct, potentially more type-safe data access layer.
+- [ ] **Lightweight JS Frameworks (Alternative to Express):** Explore wrapping faster, modern Node.js frameworks like **Fastify** or **Hono** to compare performance and interoperability ease against Express.
+
+### 🚀 Performance & Future-proofing
+- [ ] **Benchmarking vs TypeScript:** Create a parallel, simplified TypeScript version of the same API to compare build times, memory footprint, cold start, and throughput (using tools like `autocannon` or `k6`).
+- [ ] **Serverless & Edge Environments (Bun/Deno/Cloudflare):** Evaluate compiling to Wasm or strict ESM to run the backend in alternative JS runtimes like Bun, Deno, or Edge computing (Cloudflare Workers).
+- [ ] **Kotlin Wasm / WASI Exploration:** With Node.js improving Wasm support, explore compiling Kotlin directly to WebAssembly to potentially bypass JavaScript overhead altogether.
 - [ ] **Observability:** Implement logging and monitoring using a Node.js compatible library like OpenTelemetry (via JS wrappers) to track application health and performance metrics.
 
 ---

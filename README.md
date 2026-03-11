@@ -160,8 +160,8 @@ curl -X DELETE http://localhost:3000/api/contacts/:id
 This PoC identifies several areas where the development experience and code quality could be enhanced to truly validate KotlinJS as a viable alternative. The next steps are categorized by their impact:
 
 ### 🛠️ Developer Experience (DX) & Tooling
-- [ ] **Hot Reloading (Fast Feedback Loop):** Configure a workflow (e.g., combining Gradle continuous build `./gradlew -t build` with `nodemon`) to match the quick restart experience of TypeScript (`tsx watch`).
-- [ ] **Debugging & Source Maps:** Ensure source maps are correctly configured and test debugging the Node.js process directly from IntelliJ IDEA or VSCode, with breakpoints hitting the `.kt` files.
+- [X] **Hot Reloading (Fast Feedback Loop):** Configure a workflow (e.g., combining Gradle continuous build `./gradlew -t build` with `nodemon`) to match the quick restart experience of TypeScript (`tsx watch`).
+- [X] **Debugging & Source Maps:** Ensure source maps are correctly configured and test debugging the Node.js process directly from IntelliJ IDEA or VSCode, with breakpoints hitting the `.kt` files.
 - [ ] **CI/CD Pipeline:** Set up GitHub Actions to build, lint, and test the application automatically on every push, ensuring the Kotlin-to-JS compilation chain remains stable.
 - [ ] **Documentation:** Add a way to document the project using KDoc comments and generate documentation with Dokka.
 

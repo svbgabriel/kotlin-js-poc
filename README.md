@@ -166,12 +166,14 @@ This PoC identifies several areas where the development experience and code qual
 - [ ] **Documentation:** Add a way to document the project using KDoc comments and generate documentation with Dokka.
 
 ### 🌉 Interoperability & Type Safety
-- [ ] **Automated Wrapper Generation:** Investigate tools to generate Kotlin external declarations from TypeScript Definition files (`.d.ts`) to significantly reduce manual effort in maintaining `infrastructure/externals` (e.g., Karakum).
+- [ ] **Automated Wrapper Generation:** Investigate tools to generate Kotlin external declarations from TypeScript Definition files (`.d.ts`) to significantly reduce manual effort in maintaining `infrastructure/externals` (e.g., Dukat or Karakum). This is the biggest barrier to entry today.
 - [ ] **Enhanced Type Safety:** Reduce the usage of `dynamic` types in the current Express/Mongoose wrappers by defining more strict external interfaces, potentially leveraging Kotlin's sealed classes.
-- [ ] **Standardized Serialization:** Create a unified abstraction for `JSON <-> Object` conversion to verify `encodeToDynamic`/`json()` calls are consistent and to handle edge cases (like `_id` generation) in a single place.
+- [ ] **Standardized Serialization:** Create a unified abstraction for `JSON <-> Object` conversion to verify `encodeToDynamic`/`json()` calls are consistent and to handle edge cases (like `_id` generation or Date mapping) in a single place.
+- [ ] **Error Handling Interop:** Create a standardized middleware to map Kotlin exceptions (like Konform validation errors or custom domain exceptions) automatically to structured Express JSON error responses.
 
 ### 🏗️ Architecture & Testing
 - [ ] **Integration Testing (Testcontainers):** Expand the test suite to include integration tests that spin up a real MongoDB instance (e.g., via Testcontainers for Node) to verify the data access layer thoroughly.
+- [ ] **Production Bundling:** Configure a bundler (like Webpack, Rollup, or ESBuild) via Gradle to package the application and its dependencies into a single, optimized JS file for production deployment.
 - [ ] **Native MongoDB Driver:** Evaluate replacing Mongoose with wrappers for the official `mongodb` Node.js driver. This could reduce the overhead of Mongoose's object mapping and provide a more direct, potentially more type-safe data access layer.
 - [ ] **Lightweight JS Frameworks (Alternative to Express):** Explore wrapping faster, modern Node.js frameworks like **Fastify** or **Hono** to compare performance and interoperability ease against Express.
 

@@ -172,7 +172,7 @@ This PoC identifies several areas where the development experience and code qual
 - [ ] **Error Handling Interop:** Create a standardized middleware to map Kotlin exceptions (like Konform validation errors or custom domain exceptions) automatically to structured Express JSON error responses.
 
 ### 🏗️ Architecture & Testing
-- [ ] **Integration Testing (Testcontainers):** Expand the test suite to include integration tests that spin up a real MongoDB instance (e.g., via Testcontainers for Node) to verify the data access layer thoroughly.
+- [X] **Integration Testing (Testcontainers):** Expand the test suite to include integration tests that spin up a real MongoDB instance (e.g., via Testcontainers for Node) to verify the data access layer thoroughly.
 - [ ] **Production Bundling:** Configure a bundler (like Webpack, Rollup, or ESBuild) via Gradle to package the application and its dependencies into a single, optimized JS file for production deployment.
 - [ ] **Native MongoDB Driver:** Evaluate replacing Mongoose with wrappers for the official `mongodb` Node.js driver. This could reduce the overhead of Mongoose's object mapping and provide a more direct, potentially more type-safe data access layer.
 - [ ] **Lightweight JS Frameworks (Alternative to Express):** Explore wrapping faster, modern Node.js frameworks like **Fastify** or **Hono** to compare performance and interoperability ease against Express.

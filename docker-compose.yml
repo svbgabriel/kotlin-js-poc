@@ -11,11 +11,11 @@ services:
         depends_on:
             - mongo
     mongo:
-        image: mongo:8
+        image: mongo:8.2
         restart: no
         environment:
             MONGO_INITDB_ROOT_USERNAME: admin
             MONGO_INITDB_ROOT_PASSWORD: admin
             MONGO_INITDB_DATABASE: contacts
         ports:
-            -   "27017:27017"
+            - "27017:27017"

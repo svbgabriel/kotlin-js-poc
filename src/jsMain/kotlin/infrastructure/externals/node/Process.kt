@@ -11,10 +11,12 @@ external interface NodeProcess {
 }
 
 external interface EnvironmentVariables {
-    val DB_USER: String?
-    val DB_PASS: String?
-    val DB_HOST: String?
-    val DB_NAME: String?
+    var DB_USER: String?
+    var DB_PASS: String?
+    var DB_HOST: String?
+    var DB_PORT: String?
+    var DB_NAME: String?
+    var DB_AUTH_SOURCE: String?
 
-    val SERVER_PORT: String?
+    var SERVER_PORT: String?
 }

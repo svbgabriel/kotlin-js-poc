@@ -44,6 +44,9 @@ kotlin {
             implementation(libs.kotest.assertions.core)
             implementation(libs.kotlinx.coroutines.test)
         }
+        jsTest.dependencies {
+            implementation(npm("testcontainers", "10.18.0"))
+        }
         jsMain.dependencies {
             implementation(npm("express", "^5.2.1"))
             implementation(npm("mongoose", "^9.2.1"))

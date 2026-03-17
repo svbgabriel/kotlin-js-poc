@@ -183,5 +183,27 @@ This PoC identifies several areas where the development experience and code qual
 - [ ] **Kotlin Wasm / WASI Exploration:** With Node.js improving Wasm support, explore compiling Kotlin directly to WebAssembly to potentially bypass JavaScript overhead altogether.
 - [ ] **Observability:** Implement logging and monitoring using a Node.js compatible library like OpenTelemetry (via JS wrappers) to track application health and performance metrics.
 
+## 🧪 Testing
+
+The project uses **Kotest** as the testing framework and **Mokkery** for mocking. The test suite includes unit, integration, and end-to-end (E2E) tests.
+
+### Run all tests
+To run all tests (Unit, Integration, and E2E) in the Node.js environment:
+```bash
+./gradlew jsNodeTest
+```
+E2E tests use **Testcontainers** to spin up a real MongoDB instance during execution.
+
+### Run specific tests
+You can filter for specific tests using the `--tests` property:
+```bash
+./gradlew jsNodeTest --tests "ContactControllerTest"
+```
+
+### Test Types
+*   **Unit Tests:** Located in `src/jsTest/kotlin/...`, these test business logic in isolation.
+*   **Integration Tests:** Verify persistence with MongoDB (via Testcontainers).
+*   **E2E (End-to-End):** Test the full API flow by starting the Express server and making real HTTP calls.
+
 ---
 *This project serves as a knowledge base for migrations or new projects wishing to leverage Kotlin in the Server-side JavaScript environment.*

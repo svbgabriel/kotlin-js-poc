@@ -19,7 +19,7 @@ external interface ExpressApplication {
     fun use(middleware: RequestHandler)
     fun use(errorHandler: ErrorRequestHandler)
     fun use(path: String, middleware: RequestHandler)
-    fun listen(port: Int, callback: () -> Unit)
+    fun listen(port: Int, callback: () -> Unit): Server
     fun route(path: String): Route
 
     fun get(path: String, handler: RequestHandler)
@@ -59,4 +59,8 @@ external interface Response {
 @JsPlainObject
 external interface ExpressUrlEncodedOptions {
     val extended: Boolean?
+}
+
+external interface Server {
+    fun close(callback: () -> Unit = definedExternally)
 }

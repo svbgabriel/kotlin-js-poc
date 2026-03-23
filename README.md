@@ -16,7 +16,7 @@ To run this project locally, you will need:
 
 ### Option 1: Via Docker (Recommended)
 
-The simplest way to run the full application (App + Database) is using Docker Compose.
+The simplest way to run the full application (App and Database) is using Docker Compose.
 
 ```bash
 docker compose up --build
@@ -80,7 +80,7 @@ external interface ExpressApplication {
 ```
 This allows us to use native Node libraries with Kotlin's type safety.
 
-## 📊 Pros and Cons (vs TypeScript)
+## 📊 Pros and Cons (vs. TypeScript)
 
 Based on the exploration of this project:
 
@@ -104,7 +104,7 @@ Based on the exploration of this project:
 *   **Database:** MongoDB with Mongoose (via wrapper)
 *   **Dependency Injection:** Koin
 *   **Build:** Gradle (Kotlin DSL)
-*   **Tests:** Kotest
+*   **Tests:** Kotest and Mokkery
 
 ## 📡 API Usage (Curl Examples)
 
@@ -169,7 +169,7 @@ This PoC identifies several areas where the development experience and code qual
 - [ ] **Automated Wrapper Generation:** Investigate tools to generate Kotlin external declarations from TypeScript Definition files (`.d.ts`) to significantly reduce manual effort in maintaining `infrastructure/externals` (e.g., Dukat or Karakum). This is the biggest barrier to entry today.
 - [ ] **Enhanced Type Safety:** Reduce the usage of `dynamic` types in the current Express/Mongoose wrappers by defining more strict external interfaces, potentially leveraging Kotlin's sealed classes.
 - [ ] **Standardized Serialization:** Create a unified abstraction for `JSON <-> Object` conversion to verify `encodeToDynamic`/`json()` calls are consistent and to handle edge cases (like `_id` generation or Date mapping) in a single place.
-- [ ] **Error Handling Interop:** Create a standardized middleware to map Kotlin exceptions (like Konform validation errors or custom domain exceptions) automatically to structured Express JSON error responses.
+- [ ] **Error Handling Interop:** Create standardized middleware to map Kotlin exceptions (like Konform validation errors or custom domain exceptions) automatically to structured Express JSON error responses.
 
 ### 🏗️ Architecture & Testing
 - [X] **Integration Testing (Testcontainers):** Expand the test suite to include integration tests that spin up a real MongoDB instance (e.g., via Testcontainers for Node) to verify the data access layer thoroughly.

@@ -180,3 +180,29 @@ replay_pid*
 .kotlin/
 
 .idea/
+
+### AI Agents
+# Cursor
+.cursor/
+.cursorrules
+
+# Claude / Anthropic
+.anthropic/
+claude_desktop.json
+
+# Aider
+.aider*
+
+# Windsurf
+.windsurf/
+
+# JetBrains AI / Junie
+.idea/ai_assistant/
+.junie/
+
+# Generic AI / LLM
+.github/copilot/
+.llm-context
+.ai-context
+.context.md
+.ai/

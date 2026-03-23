@@ -1,76 +1,63 @@
 package io.github.svbgabriel.infrastructure.web.controller
 
-import io.github.svbgabriel.infrastructure.web.controller.validation.ContactValidator
-import io.github.svbgabriel.infrastructure.externals.express.Request
-import io.github.svbgabriel.infrastructure.externals.express.Response
-import io.github.svbgabriel.infrastructure.web.HttpStatus
 import io.github.svbgabriel.domain.service.ContactService
-import io.github.svbgabriel.infrastructure.externals.express.ExpressExtensions.receive
-import io.github.svbgabriel.infrastructure.externals.express.ExpressExtensions.sendJson
-import io.github.svbgabriel.infrastructure.externals.express.ExpressExtensions.sendNoContent
-import io.github.svbgabriel.infrastructure.web.controller.dto.request.CreateContactRequest
-import io.github.svbgabriel.infrastructure.web.controller.dto.request.UpdateContactRequest
+import io.github.svbgabriel.infrastructure.web.HttpStatus
+import io.github.svbgabriel.infrastructure.web.WebContext
+import io.github.svbgabriel.infrastructure.web.body
 import io.github.svbgabriel.infrastructure.web.controller.dto.response.ContactResponse
 import io.github.svbgabriel.infrastructure.web.controller.dto.response.ErrorResponse
+import io.github.svbgabriel.infrastructure.web.controller.validation.ContactValidator
+import io.github.svbgabriel.infrastructure.web.respond
 
 class ContactController(private val service: ContactService) {
 
-    suspend fun select(res: Response) {
+    suspend fun findAll(context: WebContext) {
         val result = service.findAll()
             .map { ContactResponse.fromDomain(it) }
-            .toTypedArray()
-
-        res.sendJson(HttpStatus.OK, result)
+        context.respond(HttpStatus.OK, result)
     }
 
-    suspend fun selectOne(req: Request, res: Response) {
-        val id = req.params["id"].toString()
+    suspend fun findById(context: WebContext) {
+        val id = context.params["id"] ?: throw Exception(ID_IS_REQUIRED)
         val result = service.findById(id)
-
         if (result != null) {
-            val response = ContactResponse.fromDomain(result)
-            res.sendJson(HttpStatus.OK, response)
+            context.respond(HttpStatus.OK, ContactResponse.fromDomain(result))
         } else {
-            res.sendJson(HttpStatus.NOT_FOUND, ErrorResponse(CONTACT_NOT_FOUND))
+            context.respond(HttpStatus.NOT_FOUND, ErrorResponse(CONTACT_NOT_FOUND))
         }
     }
 
-    suspend fun insert(req: Request, res: Response) {
-        val body = req.receive<CreateContactRequest>()
-        ContactValidator.validate(body)
+    suspend fun create(context: WebContext) {
+        val body = context.body(ContactValidator.validateCreateContactRequest)
         val contactInput = body.toDomain()
-
         val result = service.create(contactInput)
-        val response = ContactResponse.fromDomain(result)
-        res.sendJson(HttpStatus.CREATED, response)
+        context.respond(HttpStatus.CREATED, ContactResponse.fromDomain(result))
     }
 
-    suspend fun update(req: Request, res: Response) {
-        val id = req.params["id"].toString()
-        val body = req.receive<UpdateContactRequest>()
-        ContactValidator.validate(body)
+    suspend fun update(context: WebContext) {
+        val id = context.params["id"] ?: throw Exception(ID_IS_REQUIRED)
+        val body = context.body(ContactValidator.validateUpdateContactRequest)
         val contactInput = body.toDomain(id)
-
         val updated = service.update(id, contactInput)
         if (updated) {
-            res.sendNoContent()
+            context.respondStatus(HttpStatus.NO_CONTENT)
         } else {
-            res.sendJson(HttpStatus.NOT_FOUND, ErrorResponse(CONTACT_NOT_FOUND))
+            context.respond(HttpStatus.NOT_FOUND, ErrorResponse(CONTACT_NOT_FOUND))
         }
     }
 
-    suspend fun delete(req: Request, res: Response) {
-        val id = req.params["id"].toString()
-        val result = service.delete(id)
-
-        if (result) {
-            res.sendNoContent()
+    suspend fun delete(context: WebContext) {
+        val id = context.params["id"] ?: throw Exception(ID_IS_REQUIRED)
+        val deleted = service.delete(id)
+        if (deleted) {
+            context.respondStatus(HttpStatus.NO_CONTENT)
         } else {
-            res.sendJson(HttpStatus.NOT_FOUND, ErrorResponse(CONTACT_NOT_FOUND))
+            context.respond(HttpStatus.NOT_FOUND, ErrorResponse(CONTACT_NOT_FOUND))
         }
     }
 
     companion object {
-        private const val CONTACT_NOT_FOUND = "Contact not found"
+        const val CONTACT_NOT_FOUND = "Contact not found"
+        const val ID_IS_REQUIRED = "ID is required"
     }
 }

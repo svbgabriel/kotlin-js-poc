@@ -13,6 +13,10 @@ class StatusE2ETest : E2ETestBase() {
             response.status shouldBe HttpStatus.OK.statusCode
             val body = response.json().await()
             (body.status as String) shouldBe "UP"
+            
+            // Check for checks map as well
+            val checks = body.checks
+            (checks.database.status as String) shouldBe "UP"
         }
     }
 }

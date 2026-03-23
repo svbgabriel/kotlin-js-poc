@@ -7,5 +7,11 @@ enum class HttpStatus(val statusCode: Int, val description: String) {
     BAD_REQUEST(400, "Bad Request"),
     NOT_FOUND(404, "Not Found"),
     CONFLICT(409, "Conflict"),
-    INTERNAL_SERVER_ERROR(500, "Internal Server Error"),
+    INTERNAL_SERVER_ERROR(500, "Internal Server Error");
+    
+    companion object {
+        fun fromStatusCode(statusCode: Int): HttpStatus {
+            return entries.find { it.statusCode == statusCode } ?: INTERNAL_SERVER_ERROR
+        }
+    }
 }

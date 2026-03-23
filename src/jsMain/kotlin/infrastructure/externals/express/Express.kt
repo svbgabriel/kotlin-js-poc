@@ -63,4 +63,5 @@ external interface ExpressUrlEncodedOptions {
 
 external interface Server {
     fun close(callback: () -> Unit = definedExternally)
+    fun address(): dynamic
 }

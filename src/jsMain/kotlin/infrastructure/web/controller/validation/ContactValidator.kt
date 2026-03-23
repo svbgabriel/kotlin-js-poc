@@ -10,7 +10,7 @@ import io.konform.validation.constraints.pattern
 object ContactValidator {
     private val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$".toRegex()
 
-    private val validateCreateContactRequest = Validation {
+    val validateCreateContactRequest = Validation {
         CreateContactRequest::name {
             notBlank() hint "name cannot be blank"
         }
@@ -23,7 +23,7 @@ object ContactValidator {
         }
     }
 
-    private val validateUpdateContactRequest = Validation {
+    val validateUpdateContactRequest = Validation {
         UpdateContactRequest::name {
             notBlank() hint "name cannot be blank"
         }

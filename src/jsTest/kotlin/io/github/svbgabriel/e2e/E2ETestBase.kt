@@ -1,16 +1,19 @@
 package io.github.svbgabriel.e2e
 
-import io.github.svbgabriel.App
 import io.github.svbgabriel.di.appModule
+import io.github.svbgabriel.di.installDependencyInjectionModule
+import io.github.svbgabriel.infrastructure.database.installDatabase
 import io.github.svbgabriel.infrastructure.database.mongooseVal
-import io.github.svbgabriel.infrastructure.externals.express.Server
+import io.github.svbgabriel.infrastructure.web.WebServer
 import io.github.svbgabriel.infrastructure.externals.node.process
 import io.github.svbgabriel.infrastructure.externals.testcontainers.GenericContainer
 import io.github.svbgabriel.infrastructure.externals.testcontainers.StartedTestContainer
 import io.github.svbgabriel.infrastructure.logging.LoggerFactory
+import io.github.svbgabriel.infrastructure.web.embeddedServer
+import infrastructure.web.plugin.installAppInfrastructure
+import io.github.svbgabriel.infrastructure.web.routes.installContactRoutes
 import io.kotest.core.spec.style.FunSpec
 import kotlinx.coroutines.await
-import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import kotlin.js.Promise
 import kotlin.js.json
@@ -18,7 +21,7 @@ import kotlin.js.json
 open class E2ETestBase : FunSpec() {
     private val logger = LoggerFactory.getLogger("E2ETestBase")
     private lateinit var container: StartedTestContainer
-    private var server: Server? = null
+    private var server: WebServer? = null
     private var serverPort: Int = 0
 
     fun baseUrl() = "http://localhost:$serverPort"
@@ -43,18 +46,23 @@ open class E2ETestBase : FunSpec() {
             process.env.DB_NAME = "e2e-contacts"
             process.env.DB_AUTH_SOURCE = "admin"
 
-            startKoin {
-                modules(appModule)
-            }
+            server = Promise<WebServer> { resolve, _ ->
+                embeddedServer(
+                    port = 0,
+                    onListen = { s ->
+                        val address = js("s.address()")
+                        serverPort = address.port as Int
+                        logger.info("E2E Server started on port $serverPort")
+                        resolve(s)
+                    }
+                ) {
+                    installDependencyInjectionModule {
+                        modules(appModule)
+                    }
+                    installDatabase()
 
-            val appInstance = App()
-            server = Promise { resolve, _ ->
-                lateinit var s: Server
-                s = appInstance.app.listen(0) {
-                    val address = js("s.address()")
-                    serverPort = address.port as Int
-                    logger.info("E2E Server started on port $serverPort")
-                    resolve(s)
+                    installAppInfrastructure()
+                    installContactRoutes()
                 }
             }.await()
         }

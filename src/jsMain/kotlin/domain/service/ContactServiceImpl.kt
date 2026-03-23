@@ -1,4 +1,4 @@
-package io.github.svbgabriel.domain.application.service
+package io.github.svbgabriel.domain.service
 
 import io.github.svbgabriel.domain.model.Contact
 import io.github.svbgabriel.domain.ports.repository.ContactRepository

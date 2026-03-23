@@ -5,7 +5,7 @@ import dev.mokkery.everySuspend
 import dev.mokkery.mock
 import dev.mokkery.verifySuspend
 import io.github.svbgabriel.domain.model.Contact
-import io.github.svbgabriel.domain.repository.ContactRepository
+import io.github.svbgabriel.domain.ports.repository.ContactRepository
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 

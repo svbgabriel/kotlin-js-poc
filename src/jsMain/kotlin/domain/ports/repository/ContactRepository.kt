@@ -1,8 +1,8 @@
-package io.github.svbgabriel.domain.service
+package io.github.svbgabriel.domain.ports.repository
 
 import io.github.svbgabriel.domain.model.Contact
 
-interface ContactService {
+interface ContactRepository {
     suspend fun findAll(): Array<Contact>
     suspend fun findById(id: String): Contact?
     suspend fun create(contact: Contact): Contact

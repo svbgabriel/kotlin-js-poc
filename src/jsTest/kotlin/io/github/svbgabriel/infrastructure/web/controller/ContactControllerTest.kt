@@ -7,7 +7,7 @@ import dev.mokkery.matcher.any
 import dev.mokkery.mock
 import dev.mokkery.verifySuspend
 import io.github.svbgabriel.domain.model.Contact
-import io.github.svbgabriel.domain.service.ContactService
+import io.github.svbgabriel.domain.ports.service.ContactService
 import io.github.svbgabriel.infrastructure.web.HttpStatus
 import io.github.svbgabriel.infrastructure.web.WebContext
 import io.github.svbgabriel.infrastructure.web.controller.dto.request.CreateContactRequest

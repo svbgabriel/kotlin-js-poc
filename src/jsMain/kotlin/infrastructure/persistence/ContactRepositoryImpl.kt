@@ -1,7 +1,7 @@
 package io.github.svbgabriel.infrastructure.persistence
 
 import io.github.svbgabriel.domain.model.Contact
-import io.github.svbgabriel.domain.repository.ContactRepository
+import io.github.svbgabriel.domain.ports.repository.ContactRepository
 import kotlinx.coroutines.await
 import kotlin.js.json
 

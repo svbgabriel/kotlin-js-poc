@@ -1,8 +1,8 @@
 package io.github.svbgabriel.domain.application.service
 
 import io.github.svbgabriel.domain.model.Contact
-import io.github.svbgabriel.domain.repository.ContactRepository
-import io.github.svbgabriel.domain.service.ContactService
+import io.github.svbgabriel.domain.ports.repository.ContactRepository
+import io.github.svbgabriel.domain.ports.service.ContactService
 
 class ContactServiceImpl(private val repository: ContactRepository) : ContactService {
     override suspend fun findAll(): Array<Contact> = repository.findAll()

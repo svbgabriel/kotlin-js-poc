@@ -1,21 +1,21 @@
 package io.github.svbgabriel.e2e
 
-import io.github.svbgabriel.infrastructure.externals.express.ExpressExtensions.jsonSerializer
 import io.github.svbgabriel.infrastructure.externals.javascript.fetch
 import io.github.svbgabriel.infrastructure.web.HttpStatus
 import io.github.svbgabriel.infrastructure.web.controller.dto.request.CreateContactRequest
 import io.github.svbgabriel.infrastructure.web.controller.dto.response.ContactResponse
-import io.kotest.matchers.shouldBe
 import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.await
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromDynamic
 import kotlin.js.json
 
 @OptIn(ExperimentalSerializationApi::class)
 class ContactE2ETest : E2ETestBase() {
+    val jsonSerializer = Json { ignoreUnknownKeys = true }
+
     init {
         test("should perform full CRUD on contacts") {
         // 1. List (empty)
@@ -38,7 +38,7 @@ class ContactE2ETest : E2ETestBase() {
                 "body" to jsonSerializer.encodeToString(newContact)
             )
         ).await()
-        
+
         createResponse.status shouldBe HttpStatus.CREATED.statusCode
         val created = jsonSerializer.decodeFromDynamic<ContactResponse>(createResponse.json().await())
         created.name shouldBe "E2E User"
@@ -93,7 +93,7 @@ class ContactE2ETest : E2ETestBase() {
                 "body" to jsonSerializer.encodeToString(invalidContact)
             )
         ).await()
-        
+
         response.status shouldBe HttpStatus.BAD_REQUEST.statusCode
         val body = response.json().await()
         (body.error as Boolean) shouldBe true

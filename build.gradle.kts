@@ -61,6 +61,10 @@ tasks.withType<KotlinJsCompile>().configureEach {
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.targets.js.testing.KotlinJsTest>().configureEach {
+    reports {
+        html.required.set(true)
+        junitXml.required.set(true)
+    }
     testLogging {
         events("passed", "skipped", "failed")
         showStandardStreams = true

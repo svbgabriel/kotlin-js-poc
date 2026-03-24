@@ -42,23 +42,25 @@ Ensure you have a MongoDB instance running locally or adjust the connection stri
 
 The project follows a classic layered architecture (Controller-Service-Repository), adapted for the Kotlin JS ecosystem.
 
-*   `src/jsMain/kotlin/`: Main source code.
-    *   `config/`: Application configuration.
-    *   `di/`: Dependency Injection setup (Koin).
-    *   `domain/`: Core business logic and interfaces.
-        *   `application/service/`: Application service implementations.
-        *   `model/`: Domain models.
-        *   `repository/`: Repository interfaces.
-        *   `service/`: Service interfaces.
+*   `src/jsMain/kotlin/io/github/svbgabriel/`: Main source code.
+    *   `Application.kt`: Entry point of the application.
+    *   `config/`: Application configuration and environment variables mapping.
+    *   `di/`: Dependency Injection setup using Koin.
+    *   `domain/`: Core business logic and interfaces (Hexagonal Architecture / Ports & Adapters).
+        *   `model/`: Domain models (e.g., `Contact`).
+        *   `ports/`: Interfaces for external communication (Repository and Service ports).
+        *   `service/`: Implementation of domain services (Business logic).
     *   `infrastructure/`: Technical implementation and external adapters.
-        *   `database/`: Database connection logic.
-        *   `externals/`: **The core of interoperability.** Wrappers for JS libraries (Express, Mongoose, Node).
-        *   `logging/`: Logging utilities.
-        *   `persistence/`: Mongoose models and repository implementations.
-        *   `web/`: Web layer components.
-            *   `controller/`: HTTP Request Handlers (Controllers).
+        *   `database/`: MongoDB connection logic and Mongoose setup.
+        *   `externals/`: **The core of interoperability.** Kotlin wrappers for JS libraries (Express, Mongoose, Node).
+        *   `health/`: Health check implementations.
+        *   `logging/`: Logging abstractions and implementations.
+        *   `persistence/`: Repository implementations and Mongoose schemas.
+        *   `web/`: Web layer (Express integration).
+            *   `controller/`: HTTP Request Handlers.
+            *   `plugin/`: Infrastructure setup (DI, Database, App-wide middlewares).
             *   `routes/`: Route definitions.
-            *   `Middleware.kt`: Express middlewares.
+            *   `Middleware.kt`: Express specific middlewares.
 
 ## 🔍 How Interoperability Works (Kotlin ↔ JS)
 
@@ -162,7 +164,8 @@ This PoC identifies several areas where the development experience and code qual
 ### 🛠️ Developer Experience (DX) & Tooling
 - [X] **Hot Reloading (Fast Feedback Loop):** Configure a workflow (e.g., combining Gradle continuous build `./gradlew -t build` with `nodemon`) to match the quick restart experience of TypeScript (`tsx watch`).
 - [X] **Debugging & Source Maps:** Ensure source maps are correctly configured and test debugging the Node.js process directly from IntelliJ IDEA or VSCode, with breakpoints hitting the `.kt` files.
-- [ ] **CI/CD Pipeline:** Set up GitHub Actions to build, lint, and test the application automatically on every push, ensuring the Kotlin-to-JS compilation chain remains stable.
+- [X] **CI/CD Pipeline & Reports:** Set up reports (XML/HTML) to ensure the Kotlin-to-JS compilation chain remains stable and observable.
+- [ ] **Test Coverage:** Implement code coverage (e.g., using `nyc`/Istanbul or Kover) to monitor the testing effectiveness of the Kotlin code.
 - [ ] **Documentation:** Add a way to document the project using KDoc comments and generate documentation with Dokka.
 
 ### 🌉 Interoperability & Type Safety
@@ -193,6 +196,11 @@ To run all tests (Unit, Integration, and E2E) in the Node.js environment:
 ./gradlew jsNodeTest
 ```
 E2E tests use **Testcontainers** to spin up a real MongoDB instance during execution.
+
+### Test Reports
+The project is configured to generate the following reports:
+*   **JUnit XML:** Located at `build/test-results/jsNodeTest/` (ideal for CI/CD).
+*   **HTML Report:** Located at `build/reports/tests/jsTest/`.
 
 ### Run specific tests
 You can filter for specific tests using the `--tests` property:

@@ -10,7 +10,7 @@ import io.github.svbgabriel.infrastructure.externals.testcontainers.GenericConta
 import io.github.svbgabriel.infrastructure.externals.testcontainers.StartedTestContainer
 import io.github.svbgabriel.infrastructure.logging.LoggerFactory
 import io.github.svbgabriel.infrastructure.web.embeddedServer
-import infrastructure.web.plugin.installAppInfrastructure
+import io.github.svbgabriel.infrastructure.web.plugin.installAppInfrastructure
 import io.github.svbgabriel.infrastructure.web.routes.installContactRoutes
 import io.kotest.core.spec.style.FunSpec
 import kotlinx.coroutines.await

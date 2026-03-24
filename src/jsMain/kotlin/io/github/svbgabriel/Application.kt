@@ -5,7 +5,7 @@ import io.github.svbgabriel.di.appModule
 import io.github.svbgabriel.di.installDependencyInjectionModule
 import io.github.svbgabriel.infrastructure.database.installDatabase
 import io.github.svbgabriel.infrastructure.web.embeddedServer
-import infrastructure.web.plugin.installAppInfrastructure
+import io.github.svbgabriel.infrastructure.web.plugin.installAppInfrastructure
 import io.github.svbgabriel.infrastructure.web.routes.installContactRoutes
 
 fun main() {

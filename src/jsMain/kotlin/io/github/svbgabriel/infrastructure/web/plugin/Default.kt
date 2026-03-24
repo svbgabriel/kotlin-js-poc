@@ -1,4 +1,4 @@
-package infrastructure.web.plugin
+package io.github.svbgabriel.infrastructure.web.plugin
 
 import io.github.svbgabriel.infrastructure.health.DatabaseHealthCheck
 import io.github.svbgabriel.infrastructure.health.installHealthCheck

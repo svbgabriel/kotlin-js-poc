@@ -10,6 +10,8 @@ import io.github.svbgabriel.infrastructure.externals.testcontainers.GenericConta
 import io.github.svbgabriel.infrastructure.externals.testcontainers.StartedTestContainer
 import io.github.svbgabriel.infrastructure.logging.LoggerFactory
 import io.github.svbgabriel.infrastructure.web.embeddedServer
+import io.github.svbgabriel.infrastructure.web.openapi.OpenApiInfo
+import io.github.svbgabriel.infrastructure.web.openapi.installOpenApi
 import io.github.svbgabriel.infrastructure.web.plugin.installAppInfrastructure
 import io.github.svbgabriel.infrastructure.web.routes.installContactRoutes
 import io.kotest.core.spec.style.FunSpec
@@ -62,6 +64,13 @@ open class E2ETestBase : FunSpec() {
                     installDatabase()
 
                     installAppInfrastructure()
+                    installOpenApi(
+                        info = OpenApiInfo(
+                            title = "E2E Contacts API",
+                            version = "1.0.0",
+                            description = "E2E API for testing"
+                        )
+                    )
                     installContactRoutes()
                 }
             }.await()

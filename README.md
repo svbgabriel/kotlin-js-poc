@@ -157,6 +157,10 @@ Replace `:id` with the actual ID.
 curl -X DELETE http://localhost:3000/api/contacts/:id
 ```
 
+### 7. API Documentation (Swagger)
+You can access the interactive API documentation at:
+`http://localhost:3000/api-docs/`
+
 ## 🔮 Possible Improvements (Next Steps)
 
 This PoC identifies several areas where the development experience and code quality could be enhanced to truly validate KotlinJS as a viable alternative. The next steps are categorized by their impact:
@@ -165,6 +169,7 @@ This PoC identifies several areas where the development experience and code qual
 - [X] **Hot Reloading (Fast Feedback Loop):** Configure a workflow (e.g., combining Gradle continuous build `./gradlew -t build` with `nodemon`) to match the quick restart experience of TypeScript (`tsx watch`).
 - [X] **Debugging & Source Maps:** Ensure source maps are correctly configured and test debugging the Node.js process directly from IntelliJ IDEA or VSCode, with breakpoints hitting the `.kt` files.
 - [X] **CI/CD Pipeline & Reports:** Set up reports (XML/HTML) to ensure the Kotlin-to-JS compilation chain remains stable and observable.
+- [X] **API Documentation (Swagger/OpenAPI):** Integrated `swagger-ui-express` to provide interactive documentation directly from Kotlin routing DSL.
 - [ ] **Test Coverage:** Implement code coverage (e.g., using `nyc`/Istanbul or Kover) to monitor the testing effectiveness of the Kotlin code.
 - [ ] **Documentation:** Add a way to document the project using KDoc comments and generate documentation with Dokka.
 

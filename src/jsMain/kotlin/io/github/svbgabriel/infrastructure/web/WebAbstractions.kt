@@ -1,5 +1,6 @@
 package io.github.svbgabriel.infrastructure.web
 
+import io.github.svbgabriel.infrastructure.web.openapi.Operation
 import io.konform.validation.Validation
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.serializer
@@ -116,6 +117,15 @@ interface WebApplication {
     fun route(path: String, builder: RoutingBuilder.() -> Unit)
 
     /**
+     * Registers a route in the underlying engine.
+     * @param method The HTTP method (GET, POST, etc.).
+     * @param path The full path for the route.
+     * @param openApi Optional OpenAPI configuration for the route.
+     * @param handler The suspend function to handle the request.
+     */
+    fun registerRoute(method: String, path: String, openApi: Operation?, handler: suspend WebContext.() -> Unit)
+
+    /**
      * Installs a plugin or a set of configurations to the application.
      * @param plugin The configuration function.
      */
@@ -164,51 +174,69 @@ class RoutingBuilder(private val webApp: WebApplication, private val basePath: S
      * @param builder The routing builder DSL for the nested path.
      */
     fun route(path: String, builder: RoutingBuilder.() -> Unit) {
-        RoutingBuilder(webApp, "$basePath$path").apply(builder)
+        val nextPath = if (basePath.endsWith("/") && path.startsWith("/")) {
+            basePath + path.substring(1)
+        } else if (!basePath.endsWith("/") && !path.startsWith("/") && basePath.isNotEmpty() && path.isNotEmpty()) {
+            "$basePath/$path"
+        } else {
+            basePath + path
+        }
+        RoutingBuilder(webApp, nextPath).apply(builder)
     }
 
     /**
      * Registers a GET route.
      * @param path The path for the route.
+     * @param openApi Optional OpenAPI configuration for the route.
      * @param handler The suspend function to handle the request.
      */
-    fun get(path: String = "", handler: suspend WebContext.() -> Unit) = addRoute("GET", path, handler)
+    fun get(path: String = "", openApi: Operation? = null, handler: suspend WebContext.() -> Unit) = addRoute("GET", path, openApi, handler)
 
     /**
      * Registers a POST route.
      * @param path The path for the route.
+     * @param openApi Optional OpenAPI configuration for the route.
      * @param handler The suspend function to handle the request.
      */
-    fun post(path: String = "", handler: suspend WebContext.() -> Unit) = addRoute("POST", path, handler)
+    fun post(path: String = "", openApi: Operation? = null, handler: suspend WebContext.() -> Unit) = addRoute("POST", path, openApi, handler)
 
     /**
      * Registers a PUT route.
      * @param path The path for the route.
+     * @param openApi Optional OpenAPI configuration for the route.
      * @param handler The suspend function to handle the request.
      */
-    fun put(path: String = "", handler: suspend WebContext.() -> Unit) = addRoute("PUT", path, handler)
+    fun put(path: String = "", openApi: Operation? = null, handler: suspend WebContext.() -> Unit) = addRoute("PUT", path, openApi, handler)
 
     /**
      * Registers a DELETE route.
      * @param path The path for the route.
+     * @param openApi Optional OpenAPI configuration for the route.
      * @param handler The suspend function to handle the request.
      */
-    fun delete(path: String = "", handler: suspend WebContext.() -> Unit) = addRoute("DELETE", path, handler)
+    fun delete(path: String = "", openApi: Operation? = null, handler: suspend WebContext.() -> Unit) = addRoute("DELETE", path, openApi, handler)
 
     /**
      * Registers a PATCH route.
      * @param path The path for the route.
+     * @param openApi Optional OpenAPI configuration for the route.
      * @param handler The suspend function to handle the request.
      */
-    fun patch(path: String = "", handler: suspend WebContext.() -> Unit) = addRoute("PATCH", path, handler)
+    fun patch(path: String = "", openApi: Operation? = null, handler: suspend WebContext.() -> Unit) = addRoute("PATCH", path, openApi, handler)
 
     /**
      * Internal helper to register a route with a specific HTTP method.
      */
-    private fun addRoute(method: String, path: String, handler: suspend WebContext.() -> Unit) {
-        val fullPath = "$basePath$path"
+    private fun addRoute(method: String, path: String, openApi: Operation?, handler: suspend WebContext.() -> Unit) {
+        val fullPath = if (basePath.endsWith("/") && path.startsWith("/")) {
+            basePath + path.substring(1)
+        } else if (!basePath.endsWith("/") && !path.startsWith("/") && basePath.isNotEmpty() && path.isNotEmpty()) {
+            "$basePath/$path"
+        } else {
+            basePath + path
+        }
         // This will be implemented in the concrete WebApplication
-        (webApp as AbstractWebApplication).registerRoute(method, fullPath, handler)
+        webApp.registerRoute(method, fullPath, openApi, handler)
     }
 }
 
@@ -218,14 +246,9 @@ class RoutingBuilder(private val webApp: WebApplication, private val basePath: S
 abstract class AbstractWebApplication : WebApplication {
     private val exceptionHandlers = mutableMapOf<kotlin.reflect.KClass<out Throwable>, suspend WebContext.(Throwable) -> Unit>()
 
-    /**
-     * Registers a route in the underlying engine.
-     * Must be implemented by concrete classes.
-     * @param method The HTTP method (GET, POST, etc.).
-     * @param path The full path for the route.
-     * @param handler The suspend function to handle the request.
-     */
-    abstract fun registerRoute(method: String, path: String, handler: suspend WebContext.() -> Unit)
+    override fun registerRoute(method: String, path: String, openApi: Operation?, handler: suspend WebContext.() -> Unit) {
+        // Concrete implementations will override this to perform actual registration
+    }
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : Throwable> exception(exceptionClass: kotlin.reflect.KClass<T>, handler: suspend WebContext.(T) -> Unit) {

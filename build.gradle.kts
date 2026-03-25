@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.KotlinJsCompile
+import org.jetbrains.kotlin.gradle.targets.js.testing.KotlinJsTest
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 
@@ -50,6 +51,7 @@ kotlin {
         jsMain.dependencies {
             implementation(npm("express", "^5.2.1"))
             implementation(npm("mongoose", "^9.2.1"))
+            implementation(npm("swagger-ui-express", "^5.0.1"))
         }
     }
 }
@@ -60,7 +62,7 @@ tasks.withType<KotlinJsCompile>().configureEach {
     }
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.targets.js.testing.KotlinJsTest>().configureEach {
+tasks.withType<KotlinJsTest>().configureEach {
     reports {
         html.required.set(true)
         junitXml.required.set(true)

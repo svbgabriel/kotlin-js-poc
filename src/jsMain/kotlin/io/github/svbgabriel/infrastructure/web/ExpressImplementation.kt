@@ -6,6 +6,7 @@ import io.github.svbgabriel.infrastructure.externals.express.Request
 import io.github.svbgabriel.infrastructure.externals.express.Response
 import io.github.svbgabriel.infrastructure.externals.express.expressApplication
 import io.github.svbgabriel.infrastructure.externals.express.expressMiddleware
+import io.github.svbgabriel.infrastructure.web.openapi.Operation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -55,7 +56,7 @@ class ExpressContext(
         val body = req.body
         val headers = req.headers
         val isBodyUndefined = body == null
-        val isEmptyObject = js("typeof body === 'object' && Object.keys(body).length === 0") as Boolean
+        val isEmptyObject = js("typeof body === 'object' && body !== null && Object.keys(body).length === 0") as Boolean
         val hasNoContent = headers["content-length"] == "0" || headers["content-length"] == undefined
 
         if (isBodyUndefined || (isEmptyObject && hasNoContent)) {
@@ -122,8 +123,15 @@ class ExpressWebApplication(
         RoutingBuilder(this, path).apply(builder)
     }
 
-    override fun registerRoute(method: String, path: String, handler: suspend WebContext.() -> Unit) {
+    private val _onRouteRegistered = mutableListOf<(method: String, path: String, openApi: Operation?) -> Unit>()
+
+    fun onRouteRegistered(callback: (method: String, path: String, openApi: Operation?) -> Unit) {
+        _onRouteRegistered.add(callback)
+    }
+
+    override fun registerRoute(method: String, path: String, openApi: Operation?, handler: suspend WebContext.() -> Unit) {
         applyDefaultMiddlewares()
+        _onRouteRegistered.forEach { it(method, path, openApi) }
         val expressHandler: (Request, Response, (Any?) -> Unit) -> Unit = { req, res, _ ->
             val context = ExpressContext(req, res)
             scope.launch {

@@ -16,7 +16,11 @@ class ContactServiceImplTest : FunSpec({
         // Arrange
         val repository = mock<ContactRepository>()
         val expectedContacts = arrayOf(
-            Contact(id = "1", name = "Test", nickname = "Testy", email = "test@example.com")
+            Contact(
+                id = "1", name = "Test", nickname = "Testy", email = "test@example.com",
+                createdAt = undefined,
+                updatedAt = undefined
+            )
         )
         everySuspend { repository.findAll() } returns expectedContacts
         val service = ContactServiceImpl(repository)
@@ -33,7 +37,11 @@ class ContactServiceImplTest : FunSpec({
         // Arrange
         val repository = mock<ContactRepository>()
         val contactId = "1"
-        val expectedContact = Contact(id = contactId, name = "Test", nickname = "Testy", email = "test@example.com")
+        val expectedContact = Contact(
+            id = contactId, name = "Test", nickname = "Testy", email = "test@example.com",
+            createdAt = undefined,
+            updatedAt = undefined
+        )
         everySuspend { repository.findById(contactId) } returns expectedContact
         val service = ContactServiceImpl(repository)
 
@@ -63,8 +71,17 @@ class ContactServiceImplTest : FunSpec({
     test("should create a contact using repository") {
         // Arrange
         val repository = mock<ContactRepository>()
-        val newContact = Contact(name = "New", nickname = "Newbie", email = "new@example.com")
-        val expectedContact = Contact(id = "new-id", name = "New", nickname = "Newbie", email = "new@example.com")
+        val newContact = Contact(
+            name = "New", nickname = "Newbie", email = "new@example.com",
+            id = undefined,
+            createdAt = undefined,
+            updatedAt = undefined
+        )
+        val expectedContact = Contact(
+            id = "new-id", name = "New", nickname = "Newbie", email = "new@example.com",
+            createdAt = undefined,
+            updatedAt = undefined
+        )
         everySuspend { repository.create(newContact) } returns expectedContact
         val service = ContactServiceImpl(repository)
 
@@ -80,7 +97,12 @@ class ContactServiceImplTest : FunSpec({
         // Arrange
         val repository = mock<ContactRepository>()
         val contactId = "1"
-        val updateContact = Contact(name = "Updated", nickname = "Up", email = "up@example.com")
+        val updateContact = Contact(
+            name = "Updated", nickname = "Up", email = "up@example.com",
+            id = undefined,
+            createdAt = undefined,
+            updatedAt = undefined
+        )
         everySuspend { repository.update(contactId, updateContact) } returns true
         val service = ContactServiceImpl(repository)
 
@@ -96,7 +118,12 @@ class ContactServiceImplTest : FunSpec({
         // Arrange
         val repository = mock<ContactRepository>()
         val contactId = "non-existent"
-        val updateContact = Contact(name = "Updated", nickname = "Up", email = "up@example.com")
+        val updateContact = Contact(
+            name = "Updated", nickname = "Up", email = "up@example.com",
+            id = undefined,
+            createdAt = undefined,
+            updatedAt = undefined
+        )
         everySuspend { repository.update(contactId, updateContact) } returns false
         val service = ContactServiceImpl(repository)
 

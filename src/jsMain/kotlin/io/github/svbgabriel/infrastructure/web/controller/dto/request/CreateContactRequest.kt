@@ -12,6 +12,9 @@ data class CreateContactRequest(
     fun toDomain(): Contact = Contact(
         name = name,
         nickname = nickname,
-        email = email
+        email = email,
+        id = undefined,
+        createdAt = undefined,
+        updatedAt = undefined
     )
 }

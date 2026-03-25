@@ -30,10 +30,20 @@ class ContactControllerTest : FunSpec({
         val service = mock<ContactService>()
         val context = mock<WebContext>()
         val expectedContacts = arrayOf(
-            Contact(id = "1", name = "John Doe", nickname = "Johnny", email = "john.doe@example.com")
+            Contact(
+                id = "1", name = "John Doe", nickname = "Johnny", email = "john.doe@example.com",
+                createdAt = undefined,
+                updatedAt = undefined
+            )
         )
         everySuspend { service.findAll() } returns expectedContacts
-        everySuspend { context.respond(any<HttpStatus>(), any<List<ContactResponse>>(), any<KSerializer<List<ContactResponse>>>()) } returns Unit
+        everySuspend {
+            context.respond(
+                any<HttpStatus>(),
+                any<List<ContactResponse>>(),
+                any<KSerializer<List<ContactResponse>>>()
+            )
+        } returns Unit
 
         val controller = ContactController(service)
 
@@ -64,10 +74,20 @@ class ContactControllerTest : FunSpec({
         val service = mock<ContactService>()
         val context = mock<WebContext>()
         val contactId = "1"
-        val expectedContact = Contact(id = contactId, name = "Jane Doe", nickname = "Jane", email = "jane@example.com")
+        val expectedContact = Contact(
+            id = contactId, name = "Jane Doe", nickname = "Jane", email = "jane@example.com",
+            createdAt = undefined,
+            updatedAt = undefined
+        )
         everySuspend { service.findById(contactId) } returns expectedContact
         everySuspend { context.params } returns mapOf("id" to contactId)
-        everySuspend { context.respond(any<HttpStatus>(), any<ContactResponse>(), any<KSerializer<ContactResponse>>()) } returns Unit
+        everySuspend {
+            context.respond(
+                any<HttpStatus>(),
+                any<ContactResponse>(),
+                any<KSerializer<ContactResponse>>()
+            )
+        } returns Unit
 
         val controller = ContactController(service)
 
@@ -86,7 +106,13 @@ class ContactControllerTest : FunSpec({
         val contactId = "non-existent-id"
         everySuspend { service.findById(contactId) } returns null
         everySuspend { context.params } returns mapOf("id" to contactId)
-        everySuspend { context.respond(any<HttpStatus>(), any<ErrorResponse>(), any<KSerializer<ErrorResponse>>()) } returns Unit
+        everySuspend {
+            context.respond(
+                any<HttpStatus>(),
+                any<ErrorResponse>(),
+                any<KSerializer<ErrorResponse>>()
+            )
+        } returns Unit
 
         val controller = ContactController(service)
 
@@ -112,11 +138,19 @@ class ContactControllerTest : FunSpec({
             id = "new-id",
             name = "New Contact",
             nickname = "Newbie",
-            email = "newbie@example.com"
+            email = "newbie@example.com",
+            createdAt = undefined,
+            updatedAt = undefined
         )
         everySuspend { service.create(any()) } returns expectedContact
         everySuspend { context.receive(any<KSerializer<CreateContactRequest>>()) } returns inputRequest
-        everySuspend { context.respond(any<HttpStatus>(), any<ContactResponse>(), any<KSerializer<ContactResponse>>()) } returns Unit
+        everySuspend {
+            context.respond(
+                any<HttpStatus>(),
+                any<ContactResponse>(),
+                any<KSerializer<ContactResponse>>()
+            )
+        } returns Unit
 
         val controller = ContactController(service)
 
@@ -168,7 +202,13 @@ class ContactControllerTest : FunSpec({
         everySuspend { service.update(contactId, any()) } returns false
         everySuspend { context.params } returns mapOf("id" to contactId)
         everySuspend { context.receive(any<KSerializer<UpdateContactRequest>>()) } returns updateRequest
-        everySuspend { context.respond(any<HttpStatus>(), any<ErrorResponse>(), any<KSerializer<ErrorResponse>>()) } returns Unit
+        everySuspend {
+            context.respond(
+                any<HttpStatus>(),
+                any<ErrorResponse>(),
+                any<KSerializer<ErrorResponse>>()
+            )
+        } returns Unit
 
         val controller = ContactController(service)
 
@@ -206,7 +246,13 @@ class ContactControllerTest : FunSpec({
         val contactId = "non-existent-id"
         everySuspend { service.delete(contactId) } returns false
         everySuspend { context.params } returns mapOf("id" to contactId)
-        everySuspend { context.respond(any<HttpStatus>(), any<ErrorResponse>(), any<KSerializer<ErrorResponse>>()) } returns Unit
+        everySuspend {
+            context.respond(
+                any<HttpStatus>(),
+                any<ErrorResponse>(),
+                any<KSerializer<ErrorResponse>>()
+            )
+        } returns Unit
 
         val controller = ContactController(service)
 

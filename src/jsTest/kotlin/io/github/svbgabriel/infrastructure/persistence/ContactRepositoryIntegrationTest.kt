@@ -1,13 +1,14 @@
 package io.github.svbgabriel.infrastructure.persistence
 
+import io.github.svbgabriel.config.Configuration
 import io.github.svbgabriel.domain.model.Contact
 import io.github.svbgabriel.infrastructure.database.mongooseVal
 import io.github.svbgabriel.infrastructure.externals.node.process
 import io.github.svbgabriel.infrastructure.externals.testcontainers.GenericContainer
 import io.github.svbgabriel.infrastructure.externals.testcontainers.StartedTestContainer
 import io.kotest.core.spec.style.FunSpec
-import io.kotest.matchers.shouldBe
 import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.await
 import kotlin.js.json
 
@@ -34,7 +35,7 @@ class ContactRepositoryIntegrationTest : FunSpec({
         process.env.DB_NAME = "test-contacts"
         process.env.DB_AUTH_SOURCE = "admin"
 
-        mongooseVal.connect(io.github.svbgabriel.config.Configuration.dbUrl).await()
+        mongooseVal.connect(Configuration.dbUrl).await()
     }
 
     afterSpec {
@@ -44,7 +45,12 @@ class ContactRepositoryIntegrationTest : FunSpec({
 
     test("should save and find a contact") {
         val repository = ContactRepositoryImpl()
-        val contact = Contact(name = "Integration Test", nickname = "IT", email = "it@example.com")
+        val contact = Contact(
+            name = "Integration Test", nickname = "IT", email = "it@example.com",
+            id = undefined,
+            createdAt = undefined,
+            updatedAt = undefined
+        )
 
         val created = repository.create(contact)
         created.id.shouldNotBeNull()
@@ -58,8 +64,8 @@ class ContactRepositoryIntegrationTest : FunSpec({
     test("should list all contacts") {
         val repository = ContactRepositoryImpl()
         val contacts = repository.findAll()
-        // It might be more than 1 if tests run in same container without clearing,
-        // but here it's fresh container per spec (FunSpec default)
+        // It might be more than 1 if tests run in the same container without clearing,
+        // but here it's a fresh container per spec (FunSpec default)
         contacts.size shouldBe 1
     }
 })

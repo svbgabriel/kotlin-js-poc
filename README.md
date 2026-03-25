@@ -56,11 +56,17 @@ The project follows a classic layered architecture (Controller-Service-Repositor
         *   `health/`: Health check implementations.
         *   `logging/`: Logging abstractions and implementations.
         *   `persistence/`: Repository implementations and Mongoose schemas.
-        *   `web/`: Web layer (Express integration).
-            *   `controller/`: HTTP Request Handlers.
+        *   `web/`: Web layer abstraction and implementations.
+            *   `WebAbstractions.kt`: Agnostic web server interfaces (`WebApplication`, `RoutingBuilder`).
+            *   `ExpressImplementation.kt`: Express-specific implementation of the web abstractions.
+            *   `WebFactory.kt`: Factory to instantiate the web server.
+            *   `controller/`: HTTP Request Handlers and DTOs.
+            *   `routes/`: Route definitions using the agnostic DSL.
+            *   `openapi/`: OpenAPI/Swagger integration (Plugin, Registry, and Models).
             *   `plugin/`: Infrastructure setup (DI, Database, App-wide middlewares).
-            *   `routes/`: Route definitions.
-            *   `Middleware.kt`: Express specific middlewares.
+            *   `HttpStatus.kt`: Type-safe HTTP status codes.
+            *   `Middleware.kt`: Web server middlewares.
+            *   `Exceptions.kt`: Custom web-related exceptions.
 
 ## 🔍 How Interoperability Works (Kotlin ↔ JS)
 
@@ -158,8 +164,11 @@ curl -X DELETE http://localhost:3000/api/contacts/:id
 ```
 
 ### 7. API Documentation (Swagger)
-You can access the interactive API documentation at:
+The interactive API documentation is available at:
 `http://localhost:3000/api-docs/`
+
+You can also access the raw OpenAPI specification in JSON format:
+`http://localhost:3000/api-docs/json`
 
 ## 🔮 Possible Improvements (Next Steps)
 
@@ -169,7 +178,7 @@ This PoC identifies several areas where the development experience and code qual
 - [X] **Hot Reloading (Fast Feedback Loop):** Configure a workflow (e.g., combining Gradle continuous build `./gradlew -t build` with `nodemon`) to match the quick restart experience of TypeScript (`tsx watch`).
 - [X] **Debugging & Source Maps:** Ensure source maps are correctly configured and test debugging the Node.js process directly from IntelliJ IDEA or VSCode, with breakpoints hitting the `.kt` files.
 - [X] **CI/CD Pipeline & Reports:** Set up reports (XML/HTML) to ensure the Kotlin-to-JS compilation chain remains stable and observable.
-- [X] **API Documentation (Swagger/OpenAPI):** Integrated `swagger-ui-express` to provide interactive documentation directly from Kotlin routing DSL.
+- [X] **API Documentation (Swagger/OpenAPI):** Integrated `swagger-ui-express` via an agnostic web abstraction to provide interactive documentation and JSON specification directly from Kotlin routing DSL.
 - [ ] **Test Coverage:** Implement code coverage (e.g., using `nyc`/Istanbul or Kover) to monitor the testing effectiveness of the Kotlin code.
 - [ ] **Documentation:** Add a way to document the project using KDoc comments and generate documentation with Dokka.
 

@@ -1,5 +1,7 @@
 package io.github.svbgabriel.infrastructure.web
 
+import io.github.svbgabriel.infrastructure.web.openapi.OpenApiInfo
+import io.github.svbgabriel.infrastructure.web.openapi.OpenApiRegistry
 import io.github.svbgabriel.infrastructure.web.openapi.Operation
 import io.konform.validation.Validation
 import kotlinx.serialization.KSerializer
@@ -115,6 +117,20 @@ interface WebApplication {
      * @param builder The routing builder DSL.
      */
     fun route(path: String, builder: RoutingBuilder.() -> Unit)
+
+    /**
+     * Registers a callback that will be called whenever a route is registered.
+     * @param callback The function to be called with the method, path, and OpenAPI operation.
+     */
+    fun onRouteRegistered(callback: (method: String, path: String, openApi: Operation?) -> Unit)
+
+    /**
+     * Serves the Swagger UI at the specified path.
+     * @param path The path to serve the Swagger UI at.
+     * @param info The OpenAPI info.
+     * @param registry The OpenAPI registry containing all routes.
+     */
+    fun serveSwagger(path: String, info: OpenApiInfo, registry: OpenApiRegistry)
 
     /**
      * Registers a route in the underlying engine.

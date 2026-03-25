@@ -6,6 +6,9 @@ import io.github.svbgabriel.infrastructure.externals.express.Request
 import io.github.svbgabriel.infrastructure.externals.express.Response
 import io.github.svbgabriel.infrastructure.externals.express.expressApplication
 import io.github.svbgabriel.infrastructure.externals.express.expressMiddleware
+import io.github.svbgabriel.infrastructure.externals.swagger.swaggerUi
+import io.github.svbgabriel.infrastructure.web.openapi.OpenApiInfo
+import io.github.svbgabriel.infrastructure.web.openapi.OpenApiRegistry
 import io.github.svbgabriel.infrastructure.web.openapi.Operation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -125,8 +128,31 @@ class ExpressWebApplication(
 
     private val _onRouteRegistered = mutableListOf<(method: String, path: String, openApi: Operation?) -> Unit>()
 
-    fun onRouteRegistered(callback: (method: String, path: String, openApi: Operation?) -> Unit) {
+    override fun onRouteRegistered(callback: (method: String, path: String, openApi: Operation?) -> Unit) {
         _onRouteRegistered.add(callback)
+    }
+
+    override fun serveSwagger(path: String, info: OpenApiInfo, registry: OpenApiRegistry) {
+        applyDefaultMiddlewares()
+
+        // Serve Swagger UI
+        expressApp.use(path, swaggerUi.serve)
+
+        // Serve the raw spec as JSON for tests/debugging
+        val jsonPath = if (path.endsWith("/")) "${path}json" else "$path/json"
+        expressApp.get(jsonPath) { _, res, _ ->
+            val spec = registry.generateSpec(info)
+            res.json(spec)
+        }
+
+        expressApp.get(path) { req, res, next ->
+            val spec = registry.generateSpec(info)
+            try {
+                swaggerUi.setup(spec)(req, res, next)
+            } catch (e: Exception) {
+                next(e)
+            }
+        }
     }
 
     override fun registerRoute(method: String, path: String, openApi: Operation?, handler: suspend WebContext.() -> Unit) {

@@ -17,7 +17,7 @@ version = "1.0.0"
 
 // Improve security by disabling automatic scripts execution (--ignore-scripts)
 rootProject.plugins.withType<YarnPlugin> {
-    rootProject.the<YarnRootExtension>().ignoreScripts = false
+    rootProject.the<YarnRootExtension>().ignoreScripts = true
 }
 
 kotlin {

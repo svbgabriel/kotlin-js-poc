@@ -1,6 +1,6 @@
 package io.github.svbgabriel.infrastructure.web
 
-import io.github.svbgabriel.infrastructure.externals.node.process
+import io.github.svbgabriel.infrastructure.config.Environment
 import io.github.svbgabriel.infrastructure.logging.LoggerFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -13,6 +13,16 @@ import kotlinx.coroutines.launch
 object WebFactory {
     private val logger = LoggerFactory.getLogger("WebFactory")
 
+    /**
+     * Creates a [WebApplication] instance.
+     *
+     * @param T The type of the WebApplication to create.
+     * @param factory A function that creates a WebApplication instance given a [CoroutineScope].
+     * @param overridePort An optional port to override the default one from the environment.
+     * @param onListen A callback invoked when the server starts listening.
+     * @param configure A configuration block for the application instance.
+     * @return The created [WebApplication] instance.
+     */
     fun <T : WebApplication> create(
         factory: (CoroutineScope) -> T,
         overridePort: Int?,
@@ -40,6 +50,12 @@ object WebFactory {
 /**
  * Extension for creating a WebApplication using a DSL.
  * By default, it uses Express as the underlying engine.
+ *
+ * @param overridePort An optional port to override the default one from the environment.
+ * @param factory A function that creates a [WebApplication] instance given a [CoroutineScope].
+ * @param onListen A callback invoked when the server starts listening.
+ * @param configure A configuration block for the application instance.
+ * @return The created [WebApplication] instance.
  */
 fun embeddedServer(
     overridePort: Int? = null,

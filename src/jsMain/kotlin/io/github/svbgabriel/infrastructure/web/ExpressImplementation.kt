@@ -1,5 +1,7 @@
 package io.github.svbgabriel.infrastructure.web
 
+import io.github.svbgabriel.infrastructure.externals.dotenv.Dotenv
+import io.github.svbgabriel.infrastructure.externals.dotenv.DotenvOptions
 import io.github.svbgabriel.infrastructure.externals.express.ExpressApplication
 import io.github.svbgabriel.infrastructure.externals.express.ExpressUrlEncodedOptions
 import io.github.svbgabriel.infrastructure.externals.express.Request
@@ -99,6 +101,18 @@ class ExpressWebApplication(
     override var useDefaultMiddlewares: Boolean = true
 
     private var middlewaresApplied = false
+
+    override fun doApplyDotenv() {
+        val options = DotenvOptions(
+            path = dotenv.path,
+            encoding = dotenv.encoding,
+            debug = dotenv.debug,
+            override = dotenv.override,
+            quiet = dotenv.quiet
+        )
+
+        Dotenv.config(options)
+    }
 
     private fun applyDefaultMiddlewares() {
         if (useDefaultMiddlewares && !middlewaresApplied) {

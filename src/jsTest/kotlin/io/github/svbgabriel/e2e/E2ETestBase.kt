@@ -50,7 +50,7 @@ open class E2ETestBase : FunSpec() {
 
             server = Promise<WebServer> { resolve, _ ->
                 embeddedServer(
-                    port = 0,
+                    overridePort = 0,
                     onListen = { s ->
                         val address = js("s.address()")
                         serverPort = address.port as Int

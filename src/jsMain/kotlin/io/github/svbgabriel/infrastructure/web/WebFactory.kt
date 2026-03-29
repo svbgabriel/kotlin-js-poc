@@ -1,5 +1,6 @@
 package io.github.svbgabriel.infrastructure.web
 
+import io.github.svbgabriel.infrastructure.externals.node.process
 import io.github.svbgabriel.infrastructure.logging.LoggerFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -14,21 +15,24 @@ object WebFactory {
 
     fun <T : WebApplication> create(
         factory: (CoroutineScope) -> T,
-        port: Int,
+        overridePort: Int?,
         onListen: (WebServer) -> Unit = {},
         configure: suspend T.() -> Unit = {}
     ): T {
         val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
         val app = factory(scope)
-        
+
         scope.launch {
+            app.applyDotenv()
             app.configure()
-            val server = app.listen(port) {
-                logger.info("Server started on port $port")
+            val port = process.env.SERVER_PORT?.toIntOrNull() ?: 3000
+            val serverPort = overridePort ?: port
+            val server = app.listen(serverPort) {
+                logger.info("Server started on port $serverPort")
             }
             onListen(server)
         }
-        
+
         return app
     }
 }
@@ -38,10 +42,10 @@ object WebFactory {
  * By default, it uses Express as the underlying engine.
  */
 fun embeddedServer(
-    port: Int,
+    overridePort: Int? = null,
     factory: (CoroutineScope) -> WebApplication = { scope -> ExpressWebApplication(scope = scope) },
     onListen: (WebServer) -> Unit = {},
     configure: suspend WebApplication.() -> Unit = {}
 ): WebApplication {
-    return WebFactory.create(factory, port, onListen, configure)
+    return WebFactory.create(factory, overridePort, onListen, configure)
 }

@@ -27,12 +27,18 @@ The application will be available at `http://localhost:3000`.
 
 Ensure you have a MongoDB instance running locally or adjust the connection string in the code/environment variables.
 
-1.  **Install dependencies and compile:**
+1.  **Configure environment variables:**
+    Copy the example file and adjust the values:
+    ```bash
+    cp .env.example .env
+    ```
+
+2.  **Install dependencies and compile:**
     ```bash
     ./gradlew build
     ```
 
-2.  **Run the application in development mode:**
+3.  **Run the application in development mode:**
     ```bash
     ./gradlew jsNodeDevelopmentRun --continuous
     ```
@@ -97,6 +103,7 @@ Based on the exploration of this project:
 *   **Type System:** Kotlin's type system is stricter and safer at compile time (real null-safety) than TypeScript.
 *   **Unified Ecosystem:** Possibility to share business logic (Data Classes, Validations, Rules) with Android/JVM/iOS applications via Kotlin Multiplatform.
 *   **Gradle:** Powerful and reproducible dependency and build management.
+*   **Modern JS Interop:** Generation of ES Modules (`.mjs`) and support for modern Node.js features.
 
 ### ❌ Cons / Challenges
 *   **Interoperability Overhead:** It is necessary to write or generate wrappers (`externals`) for every JS library you want to use. There is no repository as vast as `@types/` for Kotlin JS on Node.
@@ -179,6 +186,7 @@ This PoC identifies several areas where the development experience and code qual
 - [X] **Debugging & Source Maps:** Ensure source maps are correctly configured and test debugging the Node.js process directly from IntelliJ IDEA or VSCode, with breakpoints hitting the `.kt` files.
 - [X] **CI/CD Pipeline & Reports:** Set up reports (XML/HTML) to ensure the Kotlin-to-JS compilation chain remains stable and observable.
 - [X] **API Documentation (Swagger/OpenAPI):** Integrated `swagger-ui-express` via an agnostic web abstraction to provide interactive documentation and JSON specification directly from Kotlin routing DSL.
+- [X] **Environment Variables:** Support for `.env` files via `dotenv` integration, making local development easier and more aligned with the Node.js ecosystem.
 - [ ] **Test Coverage:** Implement code coverage (e.g., using `nyc`/Istanbul or Kover) to monitor the testing effectiveness of the Kotlin code.
 - [ ] **Documentation:** Add a way to document the project using KDoc comments and generate documentation with Dokka.
 

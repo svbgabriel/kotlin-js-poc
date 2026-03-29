@@ -53,6 +53,7 @@ kotlin {
             implementation(npm("express", "^5.2.1"))
             implementation(npm("mongoose", "^9.2.1"))
             implementation(npm("swagger-ui-express", "^5.0.1"))
+            implementation(npm("dotenv", "^17.3.1"))
         }
     }
 }

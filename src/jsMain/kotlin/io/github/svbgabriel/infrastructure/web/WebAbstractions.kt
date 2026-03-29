@@ -31,7 +31,7 @@ interface WebContext {
      * Receives and deserializes the request body.
      * @param serializer The serializer to use for deserialization.
      * @return The deserialized body of type [T].
-     * @throws Exception if deserialization fails or body is missing.
+     * @throws Exception if deserialization fails or the body is missing.
      */
     suspend fun <T : Any> receive(serializer: KSerializer<T>): T
 
@@ -90,6 +90,36 @@ suspend inline fun <reified T : Any> WebContext.body(validation: Validation<T>):
 }
 
 /**
+ * Configuration options for Dotenv.
+ */
+data class DotenvConfiguration(
+    /**
+     * Whether to enable dotenv.
+     */
+    var enabled: Boolean = false,
+    /**
+     * Path to the .env file.
+     */
+    var path: String? = null,
+    /**
+     * Encoding to use.
+     */
+    var encoding: String? = null,
+    /**
+     * Whether to enable debug logging.
+     */
+    var debug: Boolean? = null,
+    /**
+     * Whether to override existing environment variables.
+     */
+    var override: Boolean? = null,
+    /**
+     * Whether to suppress errors and warnings.
+     */
+    var quiet: Boolean? = null
+)
+
+/**
  * Abstraction for the Web Application.
  */
 interface WebApplication {
@@ -97,6 +127,11 @@ interface WebApplication {
      * Whether to use default middlewares (like JSON parsing) automatically.
      */
     var useDefaultMiddlewares: Boolean
+
+    /**
+     * Configuration for loading environment variables using dotenv.
+     */
+    val dotenv: DotenvConfiguration
 
     /**
      * Registers a global middleware handler.
@@ -145,9 +180,13 @@ interface WebApplication {
      * Installs a plugin or a set of configurations to the application.
      * @param plugin The configuration function.
      */
-    fun install(plugin: WebApplication.() -> Unit) {
-        plugin()
-    }
+    fun install(plugin: WebApplication.() -> Unit)
+
+    /**
+     * Applies the dotenv configuration if enabled.
+     * This should be the first function to be called during initialization.
+     */
+    fun applyDotenv()
 
     /**
      * Starts the web server on the specified port.
@@ -260,7 +299,27 @@ class RoutingBuilder(private val webApp: WebApplication, private val basePath: S
  * Base class for WebApplication implementations to handle route registration.
  */
 abstract class AbstractWebApplication : WebApplication {
+    override val dotenv: DotenvConfiguration = DotenvConfiguration()
+
     private val exceptionHandlers = mutableMapOf<kotlin.reflect.KClass<out Throwable>, suspend WebContext.(Throwable) -> Unit>()
+
+    private var dotenvApplied = false
+
+    override fun install(plugin: WebApplication.() -> Unit) {
+        plugin()
+    }
+
+    override fun applyDotenv() {
+        if (dotenv.enabled && !dotenvApplied) {
+            doApplyDotenv()
+            dotenvApplied = true
+        }
+    }
+
+    /**
+     * Implementation-specific logic to apply dotenv.
+     */
+    protected abstract fun doApplyDotenv()
 
     override fun registerRoute(method: String, path: String, openApi: Operation?, handler: suspend WebContext.() -> Unit) {
         // Concrete implementations will override this to perform actual registration

@@ -1,13 +1,12 @@
 package io.github.svbgabriel.infrastructure.database
 
-import io.github.svbgabriel.config.Configuration
 import io.github.svbgabriel.infrastructure.logging.LoggerFactory
 
 import kotlinx.coroutines.await
 
 class Database {
 
-    private val dbURL = Configuration.dbUrl
+    private val dbURL = MongoConfiguration.dbUrl
     private val logger = LoggerFactory.getLogger(this)
 
     suspend fun createConnection() {

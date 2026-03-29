@@ -1,7 +1,7 @@
 package io.github.svbgabriel.infrastructure.persistence
 
-import io.github.svbgabriel.config.Configuration
 import io.github.svbgabriel.domain.model.Contact
+import io.github.svbgabriel.infrastructure.database.MongoConfiguration
 import io.github.svbgabriel.infrastructure.database.mongooseVal
 import io.github.svbgabriel.infrastructure.externals.node.process
 import io.github.svbgabriel.infrastructure.externals.testcontainers.GenericContainer
@@ -35,7 +35,7 @@ class ContactRepositoryIntegrationTest : FunSpec({
         process.env.DB_NAME = "test-contacts"
         process.env.DB_AUTH_SOURCE = "admin"
 
-        mongooseVal.connect(Configuration.dbUrl).await()
+        mongooseVal.connect(MongoConfiguration.dbUrl).await()
     }
 
     afterSpec {

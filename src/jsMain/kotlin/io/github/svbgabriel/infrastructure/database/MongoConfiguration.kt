@@ -1,9 +1,9 @@
-package io.github.svbgabriel.config
+package io.github.svbgabriel.infrastructure.database
 
 import io.github.svbgabriel.infrastructure.config.Environment
 import io.github.svbgabriel.infrastructure.externals.javascript.encodeURIComponent
 
-object Configuration {
+object MongoConfiguration {
 
     private val dbUser: String
         get() = Environment.get("DB_USER", "admin")

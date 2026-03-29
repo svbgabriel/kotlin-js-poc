@@ -25,7 +25,7 @@ object WebFactory {
         scope.launch {
             app.applyDotenv()
             app.configure()
-            val port = process.env.SERVER_PORT?.toIntOrNull() ?: 3000
+            val port = Environment.getInt("SERVER_PORT", 3000)
             val serverPort = overridePort ?: port
             val server = app.listen(serverPort) {
                 logger.info("Server started on port $serverPort")

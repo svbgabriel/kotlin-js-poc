@@ -2,7 +2,7 @@
 kotlin = "2.3.20"
 kotlinx-serialization = "1.10.0"
 kotlinx-coroutines-core = "1.10.2"
-kotest = "6.1.7"
+kotest = "6.1.10"
 ksp = "2.3.6"
 koin = "4.0.2"
 konform = "0.11.1"

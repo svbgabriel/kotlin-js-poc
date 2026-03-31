@@ -109,7 +109,7 @@ Based on the exploration of this project:
 *   **Interoperability Overhead:** It is necessary to write or generate wrappers (`externals`) for every JS library you want to use. There is no repository as vast as `@types/` for Kotlin JS on Node.
 *   **Learning Curve:** Node.js developers need to learn Gradle and Kotlin.
 *   **Smaller Ecosystem:** Fewer examples and tutorials focused on *Kotlin on Node.js Backend*.
-*   **Developer Experience (DX):** The feedback loop (compile Gradle -> run) can be slower than native JS tools (like `tsx` or `nodemon`) in small projects.
+*   **Developer Experience (DX):** The feedback loop (compile Gradle → run) can be slower than native JS tools (like `tsx` or `nodemon`) in small projects.
 
 ## 🛠️ Technologies Used
 
@@ -187,7 +187,8 @@ This PoC identifies several areas where the development experience and code qual
 - [X] **CI/CD Pipeline & Reports:** Set up reports (XML/HTML) to ensure the Kotlin-to-JS compilation chain remains stable and observable.
 - [X] **API Documentation (Swagger/OpenAPI):** Integrated `swagger-ui-express` via an agnostic web abstraction to provide interactive documentation and JSON specification directly from Kotlin routing DSL.
 - [X] **Environment Variables:** Support for `.env` files via `dotenv` integration, making local development easier and more aligned with the Node.js ecosystem.
-- [ ] **Test Coverage:** Implement code coverage (e.g., using `nyc`/Istanbul or Kover) to monitor the testing effectiveness of the Kotlin code.
+- [ ] **Test Coverage:** When available, implement code coverage (e.g., Kover) to monitor the testing effectiveness of the Kotlin code. At the time of writing, there are none available for KotlinJS.
+- [ ] **Code Quality:** Evaluate tools like `ktlint` or `detekt` to enforce consistent code style and identify potential issues.
 - [ ] **Documentation:** Add a way to document the project using KDoc comments and generate documentation with Dokka.
 
 ### 🌉 Interoperability & Type Safety

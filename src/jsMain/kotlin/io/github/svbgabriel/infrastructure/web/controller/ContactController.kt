@@ -4,6 +4,7 @@ import io.github.svbgabriel.domain.ports.service.ContactService
 import io.github.svbgabriel.infrastructure.web.HttpStatus
 import io.github.svbgabriel.infrastructure.web.WebContext
 import io.github.svbgabriel.infrastructure.web.body
+import io.github.svbgabriel.infrastructure.web.param
 import io.github.svbgabriel.infrastructure.web.controller.dto.response.ContactResponse
 import io.github.svbgabriel.infrastructure.web.controller.dto.response.ErrorResponse
 import io.github.svbgabriel.infrastructure.web.controller.validation.ContactValidator
@@ -18,7 +19,7 @@ class ContactController(private val service: ContactService) {
     }
 
     suspend fun findById(context: WebContext) {
-        val id = context.params["id"] ?: throw Exception(ID_IS_REQUIRED)
+        val id = context.param("id") { it.takeIf { it.isNotBlank() } }
         val result = service.findById(id)
         if (result != null) {
             context.respond(HttpStatus.OK, ContactResponse.fromDomain(result))
@@ -35,7 +36,7 @@ class ContactController(private val service: ContactService) {
     }
 
     suspend fun update(context: WebContext) {
-        val id = context.params["id"] ?: throw Exception(ID_IS_REQUIRED)
+        val id = context.param("id") { it.takeIf { it.isNotBlank() } }
         val body = context.body(ContactValidator.validateUpdateContactRequest)
         val contactInput = body.toDomain(id)
         val updated = service.update(id, contactInput)
@@ -47,7 +48,7 @@ class ContactController(private val service: ContactService) {
     }
 
     suspend fun delete(context: WebContext) {
-        val id = context.params["id"] ?: throw Exception(ID_IS_REQUIRED)
+        val id = context.param("id") { it.takeIf { it.isNotBlank() } }
         val deleted = service.delete(id)
         if (deleted) {
             context.respondStatus(HttpStatus.NO_CONTENT)

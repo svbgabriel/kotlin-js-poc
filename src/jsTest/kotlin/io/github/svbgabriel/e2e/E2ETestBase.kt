@@ -1,5 +1,6 @@
 package io.github.svbgabriel.e2e
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.svbgabriel.di.appModule
 import io.github.svbgabriel.di.installDependencyInjectionModule
 import io.github.svbgabriel.infrastructure.database.installDatabase
@@ -8,7 +9,6 @@ import io.github.svbgabriel.infrastructure.web.WebServer
 import io.github.svbgabriel.infrastructure.externals.node.process
 import io.github.svbgabriel.infrastructure.externals.testcontainers.GenericContainer
 import io.github.svbgabriel.infrastructure.externals.testcontainers.StartedTestContainer
-import io.github.svbgabriel.infrastructure.logging.LoggerFactory
 import io.github.svbgabriel.infrastructure.web.embeddedServer
 import io.github.svbgabriel.infrastructure.web.openapi.OpenApiInfo
 import io.github.svbgabriel.infrastructure.web.openapi.installOpenApi
@@ -21,7 +21,7 @@ import kotlin.js.Promise
 import kotlin.js.json
 
 open class E2ETestBase : FunSpec() {
-    private val logger = LoggerFactory.getLogger("E2ETestBase")
+    private val logger = KotlinLogging.logger("E2ETestBase")
     private lateinit var container: StartedTestContainer
     private var server: WebServer? = null
     private var serverPort: Int = 0
@@ -54,7 +54,7 @@ open class E2ETestBase : FunSpec() {
                     onListen = { s ->
                         val address = js("s.address()")
                         serverPort = address.port as Int
-                        logger.info("E2E Server started on port $serverPort")
+                        logger.info { "E2E Server started on port $serverPort" }
                         resolve(s)
                     }
                 ) {

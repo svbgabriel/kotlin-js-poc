@@ -1,24 +1,25 @@
 package io.github.svbgabriel.infrastructure.web
 
-import io.github.svbgabriel.infrastructure.logging.LoggerFactory
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.serialization.SerializationException
 
+private val logger = KotlinLogging.logger("ErrorHandler")
+
 fun WebApplication.installDefaultErrorHandlers() {
-    val logger = LoggerFactory.getLogger("ErrorHandler")
     val unknownError = "Unknown error"
 
     exception<BadRequestException> { e ->
-        logger.warn("Handled error [${HttpStatus.BAD_REQUEST.statusCode}]: ${e.message}")
+        logger.warn { "Handled error [${HttpStatus.BAD_REQUEST.statusCode}]: ${e.message}" }
         respondError(HttpStatus.BAD_REQUEST, e.message ?: unknownError)
     }
 
     exception<NotFoundException> { e ->
-        logger.warn("Handled error [${HttpStatus.NOT_FOUND.statusCode}]: ${e.message}")
+        logger.warn { "Handled error [${HttpStatus.NOT_FOUND.statusCode}]: ${e.message}" }
         respondError(HttpStatus.NOT_FOUND, e.message ?: unknownError)
     }
 
     exception<SerializationException> { e ->
-        logger.warn("Handled error [${HttpStatus.BAD_REQUEST.statusCode}]: ${e.message}")
+        logger.warn { "Handled error [${HttpStatus.BAD_REQUEST.statusCode}]: ${e.message}" }
         respondError(HttpStatus.BAD_REQUEST, e.message ?: unknownError)
     }
 
@@ -35,9 +36,9 @@ fun WebApplication.installDefaultErrorHandlers() {
         }
 
         if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR.statusCode) {
-            logger.error(message, err)
+            logger.error(err) { message }
         } else {
-            logger.warn("Handled error [$statusCode]: $message")
+            logger.warn { "Handled error [$statusCode]: $message" }
         }
 
         respondError(HttpStatus.fromStatusCode(statusCode), message)

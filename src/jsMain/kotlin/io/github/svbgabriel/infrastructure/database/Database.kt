@@ -1,13 +1,12 @@
 package io.github.svbgabriel.infrastructure.database
 
-import io.github.svbgabriel.infrastructure.logging.LoggerFactory
-
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.await
 
 class Database {
 
     private val dbURL = MongoConfiguration.dbUrl
-    private val logger = LoggerFactory.getLogger(this)
+    private val logger = KotlinLogging.logger {}
 
     suspend fun createConnection() {
         // Log sensitive URL? Maybe only mask password?
@@ -19,10 +18,10 @@ class Database {
     private fun setupListeners() {
         val dbConnection = mongooseVal.connection
         dbConnection.on("connected") {
-            logger.info("Mongoose connected successfully")
+            logger.info { "Mongoose connected successfully" }
         }
         dbConnection.on("error") { error ->
-            logger.error("Mongoose connection error: $error")
+            logger.error { "Mongoose connection error: $error" }
         }
     }
 }

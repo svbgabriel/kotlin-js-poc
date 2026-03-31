@@ -1,7 +1,7 @@
 package io.github.svbgabriel.infrastructure.web
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.svbgabriel.infrastructure.config.Environment
-import io.github.svbgabriel.infrastructure.logging.LoggerFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
  * Factory for creating WebApplication instances.
  */
 object WebFactory {
-    private val logger = LoggerFactory.getLogger("WebFactory")
+    private val logger = KotlinLogging.logger("WebFactory")
 
     /**
      * Creates a [WebApplication] instance.
@@ -38,7 +38,7 @@ object WebFactory {
             val port = Environment.getInt("SERVER_PORT", 3000)
             val serverPort = overridePort ?: port
             val server = app.listen(serverPort) {
-                logger.info("Server started on port $serverPort")
+                logger.info { "Server started on port $serverPort" }
             }
             onListen(server)
         }

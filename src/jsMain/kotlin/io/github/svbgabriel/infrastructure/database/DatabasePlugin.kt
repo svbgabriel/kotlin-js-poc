@@ -12,4 +12,8 @@ suspend fun WebApplication.installDatabase() {
         val database: Database by inject()
     }
     databaseStarter.database.createConnection()
+
+    onShutdown {
+        databaseStarter.database.close()
+    }
 }

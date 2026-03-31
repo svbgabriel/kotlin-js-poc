@@ -8,6 +8,7 @@ external interface NodeProcess {
     val env: EnvironmentVariables
     fun exit(code: Int = definedExternally)
     fun on(event: String, listener: (dynamic, dynamic) -> Unit)
+    fun once(event: String, listener: (dynamic, dynamic) -> Unit)
 }
 
 external interface EnvironmentVariables {

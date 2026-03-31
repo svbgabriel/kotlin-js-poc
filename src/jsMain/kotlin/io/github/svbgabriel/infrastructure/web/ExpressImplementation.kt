@@ -14,6 +14,8 @@ import io.github.svbgabriel.infrastructure.web.openapi.OpenApiRegistry
 import io.github.svbgabriel.infrastructure.web.openapi.Operation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
@@ -198,6 +200,15 @@ class ExpressWebApplication(
         val webServer = object : WebServer {
             override fun close(callback: () -> Unit) {
                 server.close(callback)
+            }
+
+            override suspend fun shutdown() {
+                onShutdownHooks.forEach { it() }
+                suspendCancellableCoroutine { continuation ->
+                    server.close {
+                        continuation.resume(Unit)
+                    }
+                }
             }
         }
         val dynamicWebServer = webServer.asDynamic()

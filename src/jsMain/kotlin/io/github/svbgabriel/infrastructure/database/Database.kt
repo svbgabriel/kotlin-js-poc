@@ -15,6 +15,12 @@ class Database {
         mongooseVal.connect(dbURL).await()
     }
 
+    suspend fun close() {
+        logger.info { "Closing database connection..." }
+        mongooseVal.connection.close().await()
+        logger.info { "Database connection closed" }
+    }
+
     private fun setupListeners() {
         val dbConnection = mongooseVal.connection
         dbConnection.on("connected") {

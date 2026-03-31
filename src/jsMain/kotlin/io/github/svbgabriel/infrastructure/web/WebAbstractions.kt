@@ -189,6 +189,12 @@ interface WebApplication {
     fun applyDotenv()
 
     /**
+     * Registers a callback that will be called when the application starts to shut down.
+     * @param handler The suspend function to be executed during shutdown.
+     */
+    fun onShutdown(handler: suspend () -> Unit)
+
+    /**
      * Starts the web server on the specified port.
      * @param port The port to listen on.
      * @param callback A function to be called when the server starts.
@@ -206,6 +212,12 @@ interface WebServer {
      * @param callback A function to be called when the server is closed.
      */
     fun close(callback: () -> Unit = {})
+
+    /**
+     * Shutdown the server and all its resources.
+     * This is a suspend version of close that also runs registered onShutdown hooks.
+     */
+    suspend fun shutdown()
 }
 
 /**
@@ -301,9 +313,15 @@ class RoutingBuilder(private val webApp: WebApplication, private val basePath: S
 abstract class AbstractWebApplication : WebApplication {
     override val dotenv: DotenvConfiguration = DotenvConfiguration()
 
+    protected val onShutdownHooks = mutableListOf<suspend () -> Unit>()
+
     private val exceptionHandlers = mutableMapOf<kotlin.reflect.KClass<out Throwable>, suspend WebContext.(Throwable) -> Unit>()
 
     private var dotenvApplied = false
+
+    override fun onShutdown(handler: suspend () -> Unit) {
+        onShutdownHooks.add(handler)
+    }
 
     override fun install(plugin: WebApplication.() -> Unit) {
         plugin()

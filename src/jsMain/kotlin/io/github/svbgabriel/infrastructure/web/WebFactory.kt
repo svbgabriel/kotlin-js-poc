@@ -2,10 +2,9 @@ package io.github.svbgabriel.infrastructure.web
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.svbgabriel.infrastructure.config.Environment
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
+import io.github.svbgabriel.infrastructure.externals.node.process
+import kotlinx.coroutines.*
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Factory for creating WebApplication instances.
@@ -41,6 +40,25 @@ object WebFactory {
                 logger.info { "Server started on port $serverPort" }
             }
             onListen(server)
+
+            val shutdown: (dynamic, dynamic) -> Unit = { signal, _ ->
+                logger.info { "Received $signal. Starting graceful shutdown..." }
+                scope.launch {
+                    try {
+                        withTimeout(30000.milliseconds) { // 30 seconds timeout
+                            server.shutdown()
+                        }
+                        logger.info { "Graceful shutdown completed. Exiting." }
+                        process.exit(0)
+                    } catch (e: Exception) {
+                        logger.error(e) { "Error during graceful shutdown" }
+                        process.exit(1)
+                    }
+                }
+            }
+
+            process.once("SIGTERM", shutdown)
+            process.once("SIGINT", shutdown)
         }
 
         return app

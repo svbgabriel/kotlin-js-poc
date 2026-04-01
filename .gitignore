@@ -206,3 +206,6 @@ claude_desktop.json
 .ai-context
 .context.md
 .ai/
+
+# DS_Store
+DS_Store

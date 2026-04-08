@@ -1,6 +1,7 @@
 package io.github.svbgabriel.infrastructure.web.openapi
 
 import io.github.svbgabriel.infrastructure.web.WebApplication
+import io.github.svbgabriel.swagger.OpenApiInfo
 
 fun WebApplication.installOpenApi(
     info: OpenApiInfo,

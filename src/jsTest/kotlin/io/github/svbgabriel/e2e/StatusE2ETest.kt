@@ -1,6 +1,6 @@
 package io.github.svbgabriel.e2e
 
-import io.github.svbgabriel.infrastructure.externals.javascript.fetch
+import io.github.svbgabriel.javascript.fetch
 import io.github.svbgabriel.infrastructure.web.HttpStatus
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.await

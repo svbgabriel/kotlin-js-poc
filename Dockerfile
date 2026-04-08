@@ -1,5 +1,5 @@
 # Stage 1: Build the application with Gradle
-FROM gradle:8.14.3-jdk21-alpine AS builder
+FROM gradle:9.4.1-jdk21-alpine AS builder
 
 WORKDIR /home/gradle/project
 
@@ -9,12 +9,16 @@ COPY --chown=gradle:gradle gradle ./gradle
 
 # Copy source code
 COPY --chown=gradle:gradle src ./src
-COPY --chown=gradle:gradle kotlin-js-store ./kotlin-js-store
+COPY --chown=gradle:gradle ktypes-dotenv ./ktypes-dotenv
+COPY --chown=gradle:gradle ktypes-express ./ktypes-express
+COPY --chown=gradle:gradle ktypes-javascript ./ktypes-javascript
+COPY --chown=gradle:gradle ktypes-js-store ./ktypes-js-store
+COPY --chown=gradle:gradle ktypes-mongoose ./ktypes-mongoose
+COPY --chown=gradle:gradle ktypes-node ./ktypes-node
+COPY --chown=gradle:gradle ktypes-swagger-ui ./ktypes-swagger-ui
+COPY --chown=gradle:gradle ktypes-testcontainers ./ktypes-testcontainers
 
 # Build the application
-# We use 'jsBrowserProductionWebpack' or 'jsNodeProductionRun' usually, but 'assemble' works too.
-# More specific: 'jsProductionExecutableCompileSync' ensures compilation without running.
-# And 'jsPackageJson' ensures package.json is created.
 RUN gradle clean jsProductionExecutableCompileSync jsPackageJson --no-daemon
 
 # Stage 2: Install production dependencies

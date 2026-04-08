@@ -19,3 +19,10 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "contacts"
+include(":ktypes-express")
+include(":ktypes-mongoose")
+include(":ktypes-swagger-ui")
+include(":ktypes-dotenv")
+include(":ktypes-node")
+include(":ktypes-javascript")
+include(":ktypes-testcontainers")

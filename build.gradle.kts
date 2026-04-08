@@ -48,13 +48,15 @@ kotlin {
             implementation(libs.kotlinx.coroutines.test)
         }
         jsTest.dependencies {
-            implementation(npm("testcontainers", "10.18.0"))
+            implementation(project(":ktypes-testcontainers"))
         }
         jsMain.dependencies {
-            implementation(npm("express", "^5.2.1"))
-            implementation(npm("mongoose", "^9.2.1"))
-            implementation(npm("swagger-ui-express", "^5.0.1"))
-            implementation(npm("dotenv", "^17.3.1"))
+            implementation(project(":ktypes-express"))
+            implementation(project(":ktypes-mongoose"))
+            implementation(project(":ktypes-swagger-ui"))
+            implementation(project(":ktypes-dotenv"))
+            implementation(project(":ktypes-node"))
+            implementation(project(":ktypes-javascript"))
         }
     }
 }

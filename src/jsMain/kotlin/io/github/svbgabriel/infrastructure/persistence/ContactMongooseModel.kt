@@ -1,9 +1,9 @@
 package io.github.svbgabriel.infrastructure.persistence
 
 import io.github.svbgabriel.infrastructure.database.mongooseVal
-import io.github.svbgabriel.infrastructure.externals.mongoose.Model
-import io.github.svbgabriel.infrastructure.externals.mongoose.SchemaOptions
-import io.github.svbgabriel.infrastructure.externals.mongoose.SchemaTypeOptions
+import io.github.svbgabriel.mongoose.Model
+import io.github.svbgabriel.mongoose.SchemaOptions
+import io.github.svbgabriel.mongoose.SchemaTypeOptions
 import kotlinx.js.JsPlainObject
 
 private fun newSchema(ctor: Any, definition: Any, options: Any?): Any =

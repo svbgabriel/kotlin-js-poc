@@ -1,7 +1,7 @@
 package io.github.svbgabriel.infrastructure.web
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import io.github.svbgabriel.infrastructure.externals.node.process
+import io.github.svbgabriel.node.process
 
 private val logger = KotlinLogging.logger("ProcessEvents")
 

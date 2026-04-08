@@ -3,9 +3,9 @@ package io.github.svbgabriel.infrastructure.persistence
 import io.github.svbgabriel.domain.model.Contact
 import io.github.svbgabriel.infrastructure.database.MongoConfiguration
 import io.github.svbgabriel.infrastructure.database.mongooseVal
-import io.github.svbgabriel.infrastructure.externals.node.process
-import io.github.svbgabriel.infrastructure.externals.testcontainers.GenericContainer
-import io.github.svbgabriel.infrastructure.externals.testcontainers.StartedTestContainer
+import io.github.svbgabriel.node.process
+import io.github.svbgabriel.testcontainers.GenericContainer
+import io.github.svbgabriel.testcontainers.StartedTestContainer
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe

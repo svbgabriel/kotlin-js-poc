@@ -1,7 +1,7 @@
 package io.github.svbgabriel.infrastructure.database
 
 import io.github.svbgabriel.infrastructure.config.Environment
-import io.github.svbgabriel.infrastructure.externals.javascript.encodeURIComponent
+import io.github.svbgabriel.javascript.encodeURIComponent
 
 object MongoConfiguration {
 

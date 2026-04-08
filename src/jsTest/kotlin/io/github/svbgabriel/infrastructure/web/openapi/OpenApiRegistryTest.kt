@@ -1,5 +1,8 @@
 package io.github.svbgabriel.infrastructure.web.openapi
 
+import io.github.svbgabriel.swagger.OpenApiInfo
+import io.github.svbgabriel.swagger.Operation
+import io.github.svbgabriel.swagger.Parameter
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe

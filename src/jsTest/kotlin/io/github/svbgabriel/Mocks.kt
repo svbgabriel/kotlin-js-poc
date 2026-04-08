@@ -1,7 +1,7 @@
 package io.github.svbgabriel
 
-import io.github.svbgabriel.infrastructure.externals.express.Request
-import io.github.svbgabriel.infrastructure.externals.express.Response
+import io.github.svbgabriel.express.Request
+import io.github.svbgabriel.express.Response
 import kotlin.js.json
 
 /**

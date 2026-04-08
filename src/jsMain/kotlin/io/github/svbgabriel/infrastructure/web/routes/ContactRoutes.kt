@@ -3,8 +3,8 @@ package io.github.svbgabriel.infrastructure.web.routes
 import io.github.svbgabriel.infrastructure.web.WebApplication
 import io.github.svbgabriel.infrastructure.web.controller.ContactController
 import io.github.svbgabriel.infrastructure.web.openapi.OpenApiHelper
-import io.github.svbgabriel.infrastructure.web.openapi.Operation
-import io.github.svbgabriel.infrastructure.web.openapi.Parameter
+import io.github.svbgabriel.swagger.Operation
+import io.github.svbgabriel.swagger.Parameter
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import kotlin.js.json

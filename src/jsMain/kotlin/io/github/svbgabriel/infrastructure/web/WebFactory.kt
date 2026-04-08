@@ -2,7 +2,7 @@ package io.github.svbgabriel.infrastructure.web
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.svbgabriel.infrastructure.config.Environment
-import io.github.svbgabriel.infrastructure.externals.node.process
+import io.github.svbgabriel.node.process
 import kotlinx.coroutines.*
 import kotlin.time.Duration.Companion.milliseconds
 

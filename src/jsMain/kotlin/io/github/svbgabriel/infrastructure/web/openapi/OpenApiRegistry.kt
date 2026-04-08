@@ -1,5 +1,8 @@
 package io.github.svbgabriel.infrastructure.web.openapi
 
+import io.github.svbgabriel.swagger.OpenApiInfo
+import io.github.svbgabriel.swagger.OpenApiSpec
+import io.github.svbgabriel.swagger.Operation
 import kotlin.js.json
 
 class OpenApiRegistry {

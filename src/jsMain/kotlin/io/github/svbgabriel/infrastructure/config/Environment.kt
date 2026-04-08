@@ -1,6 +1,6 @@
 package io.github.svbgabriel.infrastructure.config
 
-import io.github.svbgabriel.infrastructure.externals.node.process
+import io.github.svbgabriel.node.process
 
 object Environment {
     fun get(key: String, defaultValue: String): String {

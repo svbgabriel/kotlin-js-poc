@@ -1,5 +1,8 @@
 package io.github.svbgabriel.infrastructure.web.openapi
 
+import io.github.svbgabriel.swagger.MediaType
+import io.github.svbgabriel.swagger.RequestBody
+import io.github.svbgabriel.swagger.Schema
 import kotlin.js.Json
 import kotlin.js.json
 

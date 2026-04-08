@@ -1,8 +1,8 @@
 package io.github.svbgabriel.infrastructure.web
 
-import io.github.svbgabriel.infrastructure.web.openapi.OpenApiInfo
+import io.github.svbgabriel.swagger.OpenApiInfo
+import io.github.svbgabriel.swagger.Operation
 import io.github.svbgabriel.infrastructure.web.openapi.OpenApiRegistry
-import io.github.svbgabriel.infrastructure.web.openapi.Operation
 import io.konform.validation.Validation
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.serializer

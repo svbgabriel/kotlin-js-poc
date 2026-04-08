@@ -1,6 +1,6 @@
 package io.github.svbgabriel.e2e
 
-import io.github.svbgabriel.infrastructure.externals.node.fetch
+import io.github.svbgabriel.javascript.fetch
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe

@@ -3,17 +3,17 @@ package io.github.svbgabriel.e2e
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.svbgabriel.di.appModule
 import io.github.svbgabriel.di.installDependencyInjectionModule
+import io.github.svbgabriel.infrastructure.config.Environment
 import io.github.svbgabriel.infrastructure.database.installDatabase
 import io.github.svbgabriel.infrastructure.database.mongooseVal
 import io.github.svbgabriel.infrastructure.web.WebServer
-import io.github.svbgabriel.node.process
-import io.github.svbgabriel.testcontainers.GenericContainer
-import io.github.svbgabriel.testcontainers.StartedTestContainer
 import io.github.svbgabriel.infrastructure.web.embeddedServer
 import io.github.svbgabriel.infrastructure.web.openapi.installOpenApi
 import io.github.svbgabriel.infrastructure.web.plugin.installAppInfrastructure
 import io.github.svbgabriel.infrastructure.web.routes.installContactRoutes
 import io.github.svbgabriel.swagger.OpenApiInfo
+import io.github.svbgabriel.testcontainers.GenericContainer
+import io.github.svbgabriel.testcontainers.StartedTestContainer
 import io.kotest.core.spec.style.FunSpec
 import kotlinx.coroutines.await
 import org.koin.core.context.stopKoin
@@ -41,12 +41,12 @@ open class E2ETestBase : FunSpec() {
                 .start()
                 .await()
 
-            process.env.DB_HOST = container.getHost()
-            process.env.DB_PORT = container.getMappedPort(27017).toString()
-            process.env.DB_USER = "admin"
-            process.env.DB_PASS = "admin"
-            process.env.DB_NAME = "e2e-contacts"
-            process.env.DB_AUTH_SOURCE = "admin"
+            Environment.set("DB_HOST", container.getHost())
+            Environment.set("DB_PORT", container.getMappedPort(27017).toString())
+            Environment.set("DB_USER", "admin")
+            Environment.set("DB_PASS", "admin")
+            Environment.set("DB_NAME", "e2e-contacts")
+            Environment.set("DB_AUTH_SOURCE", "admin")
 
             server = Promise<WebServer> { resolve, _ ->
                 embeddedServer(

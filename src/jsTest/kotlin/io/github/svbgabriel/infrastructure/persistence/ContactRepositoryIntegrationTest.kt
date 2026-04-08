@@ -1,9 +1,9 @@
 package io.github.svbgabriel.infrastructure.persistence
 
 import io.github.svbgabriel.domain.model.Contact
+import io.github.svbgabriel.infrastructure.config.Environment
 import io.github.svbgabriel.infrastructure.database.MongoConfiguration
 import io.github.svbgabriel.infrastructure.database.mongooseVal
-import io.github.svbgabriel.node.process
 import io.github.svbgabriel.testcontainers.GenericContainer
 import io.github.svbgabriel.testcontainers.StartedTestContainer
 import io.kotest.core.spec.style.FunSpec
@@ -28,12 +28,12 @@ class ContactRepositoryIntegrationTest : FunSpec({
             .start()
             .await()
 
-        process.env.DB_HOST = container.getHost()
-        process.env.DB_PORT = container.getMappedPort(27017).toString()
-        process.env.DB_USER = "admin"
-        process.env.DB_PASS = "admin"
-        process.env.DB_NAME = "test-contacts"
-        process.env.DB_AUTH_SOURCE = "admin"
+        Environment.set("DB_HOST", container.getHost())
+        Environment.set("DB_PORT", container.getMappedPort(27017).toString())
+        Environment.set("DB_USER", "admin")
+        Environment.set("DB_PASS", "admin")
+        Environment.set("DB_NAME", "test-contacts")
+        Environment.set("DB_AUTH_SOURCE", "admin")
 
         mongooseVal.connect(MongoConfiguration.dbUrl).await()
     }

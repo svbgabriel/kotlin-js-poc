@@ -13,8 +13,8 @@ data class CreateContactRequest(
         name = name,
         nickname = nickname,
         email = email,
-        id = undefined,
-        createdAt = undefined,
-        updatedAt = undefined
+        id = null,
+        createdAt = null,
+        updatedAt = null
     )
 }

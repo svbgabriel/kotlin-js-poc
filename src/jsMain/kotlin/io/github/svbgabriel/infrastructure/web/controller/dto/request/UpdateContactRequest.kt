@@ -14,7 +14,7 @@ data class UpdateContactRequest(
         name = name,
         nickname = nickname,
         email = email,
-        createdAt = undefined,
-        updatedAt = undefined
+        createdAt = null,
+        updatedAt = null
     )
 }

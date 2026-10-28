@@ -6,17 +6,17 @@ import io.github.svbgabriel.javascript.encodeURIComponent
 object MongoConfiguration {
 
     private val dbUser: String
-        get() = Environment.get("DB_USER", "admin")
+        get() = Environment.getOrNull("DB_USER") ?: throw IllegalStateException("DB_USER environment variable is not set")
     private val dbPass: String
-        get() = Environment.get("DB_PASS", "admin")
+        get() = Environment.getOrNull("DB_PASS") ?: throw IllegalStateException("DB_PASS environment variable is not set")
     private val dbHost: String
-        get() = Environment.get("DB_HOST", "localhost")
+        get() = Environment.getOrNull("DB_HOST") ?: "localhost"
     private val dbPort: String
-        get() = Environment.get("DB_PORT", "27017")
+        get() = Environment.getOrNull("DB_PORT") ?: "27017"
     private val dbName: String
-        get() = Environment.get("DB_NAME", "contacts")
+        get() = Environment.getOrNull("DB_NAME") ?: "contacts"
     private val dbAuthSource: String
-        get() = Environment.get("DB_AUTH_SOURCE", "admin")
+        get() = Environment.getOrNull("DB_AUTH_SOURCE") ?: "admin"
 
     val dbUrl: String
         get() {

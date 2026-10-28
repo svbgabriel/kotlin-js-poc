@@ -294,7 +294,7 @@ fun WebApplication.installDatabase() { ... }
 - Use **Kotlin DSL** (`build.gradle.kts`) for all build scripts.
 - Manage versions via **Gradle Version Catalog** (`libs.plugins`, `libs.*`).
 - The project compiles to ES2015 target with source maps enabled.
-- Yarn script execution is disabled for security (`ignoreScripts = true`).
+- Yarn script execution is disabled for security (`ignoreScriptsProperty = true`).
 
 ### Multi-Module Structure
 
@@ -318,49 +318,49 @@ The following tools are identified for future adoption:
 
 ## Git & Commit Conventions
 
-O projeto segue o padrão **[Conventional Commits](https://www.conventionalcommits.org/)** para mensagens de commit, garantindo histórico legível e automatizável.
+The project follows the **[Conventional Commits](https://www.conventionalcommits.org/)** standard for commit messages, ensuring a readable and automatable history.
 
-### Formato
+### Format
 
 ```
-<tipo>(<escopo>): <descrição>
+<type>(<scope>): <description>
 
-[corpo opcional]
+[optional body]
 
-[footer opcional]
+[optional footer]
 ```
 
-### Tipos
+### Types
 
-| Tipo | Descrição |
-|------|-----------|
-| `feat` | Nova funcionalidade |
-| `fix` | Correção de bug |
-| `refactor` | Refatoração de código sem alterar comportamento |
-| `test` | Adição ou correção de testes |
-| `build` | Alterações no sistema de build ou dependências |
-| `ci` | Alterações em configurações de CI/CD |
-| `docs` | Apenas documentação |
-| `chore` | Tarefas de manutenção que não se encaixam em outros tipos |
-| `perf` | Melhorias de desempenho |
-| `style` | Formatação, pontuação, etc. (sem alteração de código) |
+| Type | Description |
+|------|-------------|
+| `feat` | New feature |
+| `fix` | Bug fix |
+| `refactor` | Code refactoring without behavior change |
+| `test` | Adding or fixing tests |
+| `build` | Changes to the build system or dependencies |
+| `ci` | Changes to CI/CD configurations |
+| `docs` | Documentation only |
+| `chore` | Maintenance tasks that do not fit other types |
+| `perf` | Performance improvements |
+| `style` | Formatting, punctuation, etc. (no code change) |
 
-### Escopos
+### Scopes
 
-Use o escopo para indicar a camada ou módulo afetado:
+Use the scope to indicate the affected layer or module:
 
-| Escopo | Camada |
-|--------|--------|
-| `domain` | Lógica de negócio, modelos, ports, serviços |
-| `infrastructure` | Adaptadores, persistência, banco de dados, logging |
-| `web` | Controllers, DTOs, rotas, plugins web, OpenAPI |
-| `di` | Configuração de injeção de dependência (Koin) |
-| `config` | Configuração de ambiente e aplicação |
-| `ktypes` | Wrappers externos (`ktypes-express`, `ktypes-mongoose`, etc.) |
+| Scope | Layer |
+|-------|-------|
+| `domain` | Business logic, models, ports, services |
+| `infrastructure` | Adapters, persistence, database, logging |
+| `web` | Controllers, DTOs, routes, web plugins, OpenAPI |
+| `di` | Dependency injection configuration (Koin) |
+| `config` | Environment and application configuration |
+| `ktypes` | External wrappers (`ktypes-express`, `ktypes-mongoose`, etc.) |
 | `build` | Gradle, Gradle DSL, version catalog |
 | `docker` | Dockerfile, docker-compose |
 
-### Exemplos
+### Examples
 
 ```
 feat(web): add contact creation endpoint with validation
@@ -371,13 +371,13 @@ docs: update AGENTS.md with conventional commits guide
 build(ktypes): add ktypes-testcontainers module
 ```
 
-### Regras
+### Rules
 
-- **Mensagens em inglês.** Use inglês para manter consistência com o ecossistema Kotlin/JS.
-- **Tempo presente.** Use `"add contact endpoint"` em vez de `"added contact endpoint"`.
-- **Sem ponto final** no título.
-- **Um commit, uma mudança.** Mantenha commits focados em uma única alteração lógica.
-- **Corpo opcional.** Use o corpo quando a descrição precisar de contexto adicional ou justificativa.
+- **Messages in English.** Use English to maintain consistency with the Kotlin/JS ecosystem.
+- **Present tense.** Use `"add contact endpoint"` instead of `"added contact endpoint"`.
+- **No period** at the end of the title.
+- **One commit, one change.** Keep commits focused on a single logical change.
+- **Optional body.** Use the body when the description needs additional context or justification.
 
 ---
 
@@ -386,6 +386,28 @@ build(ktypes): add ktypes-testcontainers module
 - The `Dockerfile` and `docker-compose.yml` provide containerized deployment.
 - Docker Compose runs both the application and MongoDB.
 - For production bundling, consider configuring Webpack, Rollup, or ESBuild via Gradle.
+
+---
+
+## Implementation Verification
+
+All implementations must be verified with tests and updated documentation:
+
+### Testing Requirements
+
+- **Every new feature or bug fix** must include tests that verify the expected behavior.
+- **Unit tests** are required for business logic in the `domain/` layer.
+- **Integration tests** are required when the implementation interacts with external systems (database, file system, external APIs).
+- **E2E tests** are required for new or modified API endpoints to verify the full request-response flow.
+- Tests must be added before or alongside the implementation — not after.
+- If existing tests are insufficient to cover the change, extend them before proceeding.
+
+### Documentation Requirements
+
+- **Update `README.md`** when a new feature, endpoint, or configuration option is added.
+- **Update `AGENTS.md`** when a new coding standard, architecture decision, or convention is introduced.
+- **Update KDoc** for all new public APIs, interfaces, and external declarations.
+- Documentation changes should be included in the same commit as the implementation, not in a separate commit.
 
 ---
 
@@ -398,3 +420,5 @@ build(ktypes): add ktypes-testcontainers module
 5. **Plugin-based composition:** Features are installed via `install*()` extensions.
 6. **Test at every layer:** Unit tests for logic, integration tests for persistence, E2E tests for the full API.
 7. **KDoc on public APIs:** Document interfaces, external declarations, and extension functions.
+8. **Verify with tests:** Every implementation must be validated with tests; add tests when needed.
+9. **Update documentation:** Changes to the codebase must be reflected in `README.md`, `AGENTS.md`, and KDoc as applicable.

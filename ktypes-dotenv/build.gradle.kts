@@ -15,7 +15,7 @@ kotlin {
     sourceSets {
         val jsMain by getting {
             dependencies {
-                implementation(npm("dotenv", "^17.3.1"))
+                implementation(npm("dotenv", "^18.0.8"))
             }
         }
     }

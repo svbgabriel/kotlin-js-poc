@@ -15,7 +15,7 @@ kotlin {
     sourceSets {
         val jsMain by getting {
             dependencies {
-                implementation(npm("mongoose", "^9.2.1"))
+                implementation(npm("mongoose", "^9.11.3"))
             }
         }
     }

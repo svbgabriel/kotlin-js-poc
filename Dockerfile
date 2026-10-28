@@ -1,5 +1,5 @@
 # Stage 1: Build the application with Gradle
-FROM gradle:9.4.1-jdk21-alpine AS builder
+FROM gradle:9.6.1-jdk21-alpine AS builder
 
 WORKDIR /home/gradle/project
 

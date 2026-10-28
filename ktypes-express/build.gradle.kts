@@ -15,7 +15,7 @@ kotlin {
     sourceSets {
         val jsMain by getting {
             dependencies {
-                implementation(npm("express", "^5.2.1"))
+                implementation(npm("express", "^5.3.0"))
             }
         }
     }

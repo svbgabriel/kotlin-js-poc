@@ -12,7 +12,6 @@ COPY --chown=gradle:gradle src ./src
 COPY --chown=gradle:gradle ktypes-dotenv ./ktypes-dotenv
 COPY --chown=gradle:gradle ktypes-express ./ktypes-express
 COPY --chown=gradle:gradle ktypes-javascript ./ktypes-javascript
-COPY --chown=gradle:gradle ktypes-js-store ./ktypes-js-store
 COPY --chown=gradle:gradle ktypes-mongoose ./ktypes-mongoose
 COPY --chown=gradle:gradle ktypes-node ./ktypes-node
 COPY --chown=gradle:gradle ktypes-swagger-ui ./ktypes-swagger-ui

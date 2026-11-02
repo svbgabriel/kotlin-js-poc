@@ -9,14 +9,14 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.konform.validation.Validation
-import io.konform.validation.jsonschema.minLength
+import io.konform.validation.constraints.minLength
 import kotlinx.serialization.KSerializer
 
 class WebAbstractionsExtensionsTest : FunSpec({
 
     test("body validation should use custom error message when provided") {
         val context = mock<WebContext>()
-        val validation = Validation<CreateContactRequest> {
+        val validation = Validation {
             CreateContactRequest::name { minLength(10) }
         }
         val request = CreateContactRequest(name = "Short", nickname = "Nick", email = "test@test.com")
@@ -33,7 +33,7 @@ class WebAbstractionsExtensionsTest : FunSpec({
 
     test("body validation should use default error message when custom is not provided") {
         val context = mock<WebContext>()
-        val validation = Validation<CreateContactRequest> {
+        val validation = Validation {
             CreateContactRequest::name { minLength(10) }
         }
         val request = CreateContactRequest(name = "Short", nickname = "Nick", email = "test@test.com")
@@ -50,7 +50,7 @@ class WebAbstractionsExtensionsTest : FunSpec({
     test("param validation should use custom error message for missing parameter") {
         val context = mock<WebContext>()
         val customMessage = "Required ID is missing"
-        
+
         everySuspend { context.params } returns emptyMap()
 
         val exception = shouldThrow<BadRequestException> {
@@ -63,7 +63,7 @@ class WebAbstractionsExtensionsTest : FunSpec({
     test("param validation should use custom error message for invalid transformation") {
         val context = mock<WebContext>()
         val customMessage = "ID must be numeric"
-        
+
         everySuspend { context.params } returns mapOf("id" to "abc")
 
         val exception = shouldThrow<BadRequestException> {
@@ -76,7 +76,7 @@ class WebAbstractionsExtensionsTest : FunSpec({
     test("query validation should use custom error message for invalid transformation") {
         val context = mock<WebContext>()
         val customMessage = "Page must be numeric"
-        
+
         everySuspend { context.query } returns mapOf("page" to "abc")
 
         val exception = shouldThrow<BadRequestException> {
@@ -85,10 +85,10 @@ class WebAbstractionsExtensionsTest : FunSpec({
 
         exception.message shouldBe customMessage
     }
-    
+
     test("param validation should use default error message when custom is not provided") {
         val context = mock<WebContext>()
-        
+
         everySuspend { context.params } returns emptyMap()
 
         val exception = shouldThrow<BadRequestException> {
@@ -96,7 +96,7 @@ class WebAbstractionsExtensionsTest : FunSpec({
         }
 
         exception.message shouldBe "Parameter 'id' is required"
-        
+
         everySuspend { context.params } returns mapOf("id" to "abc")
         val exception2 = shouldThrow<BadRequestException> {
             context.param("id") { null }

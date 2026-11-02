@@ -13,10 +13,8 @@ kotlin {
     }
 
     sourceSets {
-        val jsMain by getting {
-            dependencies {
-                implementation(npm("testcontainers", libs.versions.testcontainers.get()))
-            }
+        jsMain.dependencies {
+            implementation(npm("testcontainers", libs.versions.testcontainers.get()))
         }
     }
 }

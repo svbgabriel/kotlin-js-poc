@@ -13,10 +13,8 @@ kotlin {
     }
 
     sourceSets {
-        val jsMain by getting {
-            dependencies {
-                implementation(npm("dotenv", "^18.0.8"))
-            }
+        jsMain.dependencies {
+            implementation(npm("dotenv", "^18.0.8"))
         }
     }
 }

@@ -13,12 +13,10 @@ kotlin {
     }
 
     sourceSets {
-        val jsMain by getting {
-            dependencies {
-                implementation(project(":ktypes-javascript"))
-                implementation(project(":ktypes-express"))
-                implementation(npm("swagger-ui-express", "^5.0.1"))
-            }
+        jsMain.dependencies {
+            implementation(project(":ktypes-javascript"))
+            implementation(project(":ktypes-express"))
+            implementation(npm("swagger-ui-express", "^5.0.1"))
         }
     }
 }

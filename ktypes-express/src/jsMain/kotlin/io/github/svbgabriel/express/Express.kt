@@ -186,6 +186,17 @@ external interface ExpressUrlEncodedOptions {
 }
 
 /**
+ * Represents the address information returned by [Server.address].
+ *
+ * Contains the port and address (IP) the server is bound to.
+ */
+external interface AddressInfo {
+    val port: Int
+    val address: String
+    val family: String?
+}
+
+/**
  * Represents the HTTP server returned by [ExpressApplication.listen].
  */
 external interface Server {
@@ -197,5 +208,5 @@ external interface Server {
     /**
      * Returns the bound address, the address family name, and port of the server.
      */
-    fun address(): dynamic
+    fun address(): AddressInfo
 }

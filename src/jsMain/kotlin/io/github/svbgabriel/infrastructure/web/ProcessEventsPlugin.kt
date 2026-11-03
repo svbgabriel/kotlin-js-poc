@@ -9,13 +9,12 @@ private val logger = KotlinLogging.logger("ProcessEvents")
  * Plugin to handle global process events like uncaughtException and unhandledRejection.
  */
 fun WebApplication.installProcessEventsHandler() {
-    process.on("uncaughtException") { err, _ ->
+    process.on("uncaughtException") { err ->
         logger.error(err as? Throwable) { "Uncaught Exception: " }
         process.exit(1)
     }
 
-    process.on("unhandledRejection") { reason, promise ->
-        logger.error { "Unhandled Rejection at promise: $promise" }
-        logger.error { "Reason: $reason" }
+    process.on("unhandledRejection") { reason ->
+        logger.error { "Unhandled Rejection: $reason" }
     }
 }

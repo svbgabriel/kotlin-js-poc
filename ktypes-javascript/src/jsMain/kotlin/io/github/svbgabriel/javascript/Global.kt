@@ -1,5 +1,6 @@
 package io.github.svbgabriel.javascript
 
+import kotlin.js.Json
 import kotlin.js.Promise
 
 /**
@@ -15,7 +16,7 @@ external fun encodeURIComponent(uriComponent: String): String
  * @param options An object containing any custom settings that you want to apply to the request.
  * @return A [Promise] that resolves to a [FetchResponse] object.
  */
-external fun fetch(url: String, options: dynamic = definedExternally): Promise<FetchResponse>
+external fun fetch(url: String, options: Json = definedExternally): Promise<FetchResponse>
 
 /**
  * Represents the response to a [fetch] request.

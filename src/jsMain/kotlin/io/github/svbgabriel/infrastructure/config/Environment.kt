@@ -20,6 +20,11 @@ object Environment {
     }
 
     fun set(key: String, value: String?) {
-        process.env[key] = value
+        if (value != null) {
+            process.env[key] = value
+        } else {
+            // Delete the environment variable by setting it to undefined
+            process.env[key] = undefined
+        }
     }
 }

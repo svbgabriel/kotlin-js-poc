@@ -30,7 +30,7 @@ open class E2ETestBase : FunSpec() {
 
     init {
         beforeSpec {
-            container = GenericContainer("mongo:8.2")
+            container = GenericContainer("mongo:9.0")
                 .withExposedPorts(27017)
                 .withEnvironment(
                     json(
@@ -52,8 +52,7 @@ open class E2ETestBase : FunSpec() {
                 embeddedServer(
                     overridePort = 0,
                     onListen = { s ->
-                        val address = js("s.address()")
-                        serverPort = address.port as Int
+                        serverPort = s.address().port
                         logger.info { "E2E Server started on port $serverPort" }
                         resolve(s)
                     }

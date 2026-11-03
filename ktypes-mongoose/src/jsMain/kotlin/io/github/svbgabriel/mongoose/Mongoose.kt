@@ -99,6 +99,19 @@ external interface Connection {
 }
 
 /**
+ * Typed representation of a Mongoose error.
+ *
+ * Mongoose throws errors that carry a [name] (e.g., "MongoServerError", "ValidationError")
+ * and optionally a numeric [code] (e.g., 11000 for duplicate key). This interface allows
+ * consuming these errors without using `dynamic`.
+ */
+external interface MongooseError {
+    val name: String
+    val code: Number?
+    val message: String
+}
+
+/**
  * Represents a Mongoose query.
  */
 external interface Query<T> {

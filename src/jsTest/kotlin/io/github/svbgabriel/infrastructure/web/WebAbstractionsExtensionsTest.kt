@@ -4,6 +4,7 @@ import dev.mokkery.answering.returns
 import dev.mokkery.everySuspend
 import dev.mokkery.mock
 import dev.mokkery.matcher.any
+import io.github.svbgabriel.domain.exception.ValidationException
 import io.github.svbgabriel.infrastructure.web.controller.dto.request.CreateContactRequest
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
@@ -24,7 +25,7 @@ class WebAbstractionsExtensionsTest : FunSpec({
 
         everySuspend { context.receive(any<KSerializer<CreateContactRequest>>()) } returns request
 
-        val exception = shouldThrow<BadRequestException> {
+        val exception = shouldThrow<ValidationException> {
             context.body(validation, customMessage)
         }
 
@@ -40,7 +41,7 @@ class WebAbstractionsExtensionsTest : FunSpec({
 
         everySuspend { context.receive(any<KSerializer<CreateContactRequest>>()) } returns request
 
-        val exception = shouldThrow<BadRequestException> {
+        val exception = shouldThrow<ValidationException> {
             context.body(validation)
         }
 
@@ -53,7 +54,7 @@ class WebAbstractionsExtensionsTest : FunSpec({
 
         everySuspend { context.params } returns emptyMap()
 
-        val exception = shouldThrow<BadRequestException> {
+        val exception = shouldThrow<ValidationException> {
             context.param("id", customMessage) { it }
         }
 
@@ -66,7 +67,7 @@ class WebAbstractionsExtensionsTest : FunSpec({
 
         everySuspend { context.params } returns mapOf("id" to "abc")
 
-        val exception = shouldThrow<BadRequestException> {
+        val exception = shouldThrow<ValidationException> {
             context.param("id", customMessage) { it.toIntOrNull() }
         }
 
@@ -79,7 +80,7 @@ class WebAbstractionsExtensionsTest : FunSpec({
 
         everySuspend { context.query } returns mapOf("page" to "abc")
 
-        val exception = shouldThrow<BadRequestException> {
+        val exception = shouldThrow<ValidationException> {
             context.query("page", customMessage) { it.toIntOrNull() }
         }
 
@@ -91,14 +92,14 @@ class WebAbstractionsExtensionsTest : FunSpec({
 
         everySuspend { context.params } returns emptyMap()
 
-        val exception = shouldThrow<BadRequestException> {
+        val exception = shouldThrow<ValidationException> {
             context.param("id") { it }
         }
 
         exception.message shouldBe "Parameter 'id' is required"
 
         everySuspend { context.params } returns mapOf("id" to "abc")
-        val exception2 = shouldThrow<BadRequestException> {
+        val exception2 = shouldThrow<ValidationException> {
             context.param("id") { null }
         }
         exception2.message shouldBe "Invalid value for parameter 'id'"
@@ -110,7 +111,7 @@ class WebAbstractionsExtensionsTest : FunSpec({
 
         everySuspend { context.headers } returns mapOf("X-Custom" to listOf("invalid"))
 
-        val exception = shouldThrow<BadRequestException> {
+        val exception = shouldThrow<ValidationException> {
             context.header("X-Custom", customMessage) { null }
         }
 
@@ -122,7 +123,7 @@ class WebAbstractionsExtensionsTest : FunSpec({
 
         everySuspend { context.headers } returns mapOf("X-Custom" to listOf("invalid"))
 
-        val exception = shouldThrow<BadRequestException> {
+        val exception = shouldThrow<ValidationException> {
             context.header("X-Custom") { null }
         }
 

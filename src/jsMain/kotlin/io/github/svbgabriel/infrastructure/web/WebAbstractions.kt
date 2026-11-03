@@ -1,5 +1,6 @@
 package io.github.svbgabriel.infrastructure.web
 
+import io.github.svbgabriel.domain.exception.ValidationException
 import io.github.svbgabriel.swagger.OpenApiInfo
 import io.github.svbgabriel.swagger.Operation
 import io.github.svbgabriel.infrastructure.web.openapi.OpenApiRegistry
@@ -54,7 +55,7 @@ interface WebContext {
      * @param status The HTTP status to send.
      * @param message The error message to include in the response.
      */
-    suspend fun respondError(status: HttpStatus, message: String)
+    suspend fun respondError(status: HttpStatus, message: String, details: List<String> = emptyList())
 }
 
 /**
@@ -84,14 +85,15 @@ suspend inline fun <reified T : Any> WebContext.body(): T = receive<T>()
  * @param validation The validation rules to apply.
  * @param errorMessage An optional custom error message. If provided, it replaces the default message.
  * @return The validated body of type [T].
- * @throws BadRequestException if validation fails.
+ * @throws ValidationException if validation fails.
  */
 suspend inline fun <reified T : Any> WebContext.body(validation: Validation<T>, errorMessage: String? = null): T {
     val body = receive<T>()
     val result = validation(body)
     if (!result.isValid) {
         val messages = errorMessage ?: result.errors.joinToString(", ") { "${it.dataPath}: ${it.message}" }
-        throw BadRequestException(messages)
+        val details = if (errorMessage != null) emptyList<String>() else result.errors.map { "${it.dataPath}: ${it.message}" }
+        throw ValidationException(messages, details)
     }
     return body
 }
@@ -102,11 +104,11 @@ suspend inline fun <reified T : Any> WebContext.body(validation: Validation<T>, 
  * @param errorMessage An optional custom error message. If provided, it replaces the default message.
  * @param transform The transformation and validation function.
  * @return The transformed value.
- * @throws BadRequestException if the parameter is missing or validation fails.
+ * @throws ValidationException if the parameter is missing or validation fails.
  */
 fun <T> WebContext.param(key: String, errorMessage: String? = null, transform: (String) -> T?): T {
-    val value = params[key] ?: throw BadRequestException(errorMessage ?: "Parameter '$key' is required")
-    return transform(value) ?: throw BadRequestException(errorMessage ?: "Invalid value for parameter '$key'")
+    val value = params[key] ?: throw ValidationException(errorMessage ?: "Parameter '$key' is required")
+    return transform(value) ?: throw ValidationException(errorMessage ?: "Invalid value for parameter '$key'")
 }
 
 /**
@@ -115,11 +117,11 @@ fun <T> WebContext.param(key: String, errorMessage: String? = null, transform: (
  * @param errorMessage An optional custom error message. If provided, it replaces the default message.
  * @param transform The transformation and validation function.
  * @return The transformed value or null if the parameter is missing.
- * @throws BadRequestException if validation fails.
+ * @throws ValidationException if validation fails.
  */
 fun <T> WebContext.query(key: String, errorMessage: String? = null, transform: (String) -> T?): T? {
     val value = query[key] ?: return null
-    return transform(value) ?: throw BadRequestException(errorMessage ?: "Invalid value for query parameter '$key'")
+    return transform(value) ?: throw ValidationException(errorMessage ?: "Invalid value for query parameter '$key'")
 }
 
 /**
@@ -128,11 +130,11 @@ fun <T> WebContext.query(key: String, errorMessage: String? = null, transform: (
  * @param errorMessage An optional custom error message. If provided, it replaces the default message.
  * @param transform The transformation and validation function.
  * @return The transformed value or null if the header is missing.
- * @throws BadRequestException if validation fails.
+ * @throws ValidationException if validation fails.
  */
 fun <T> WebContext.header(key: String, errorMessage: String? = null, transform: (String) -> T?): T? {
     val value = headers[key]?.firstOrNull() ?: return null
-    return transform(value) ?: throw BadRequestException(errorMessage ?: "Invalid value for header '$key'")
+    return transform(value) ?: throw ValidationException(errorMessage ?: "Invalid value for header '$key'")
 }
 
 /**
@@ -264,6 +266,20 @@ interface WebServer {
      * This is a suspend version of close that also runs registered onShutdown hooks.
      */
     suspend fun shutdown()
+
+    /**
+     * Returns the address information of the server.
+     * @return An [AddressInfo] containing port and address details.
+     */
+    fun address(): AddressInfo
+}
+
+/**
+ * Address information returned by [WebServer.address].
+ */
+interface AddressInfo {
+    val port: Int
+    val address: String
 }
 
 /**

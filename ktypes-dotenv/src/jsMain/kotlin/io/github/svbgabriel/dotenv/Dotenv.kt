@@ -58,7 +58,7 @@ external interface DotenvResult {
     val error: Any?
 
     /**
-     * Parsed environment variables.
+     * Parsed environment variables as a map of key-value pairs.
      */
-    val parsed: dynamic
+    val parsed: Map<String, String>
 }

@@ -10,6 +10,18 @@ import io.github.svbgabriel.express.RequestHandler
 external val swaggerUi: SwaggerUi
 
 /**
+ * Configuration options for Swagger UI setup.
+ */
+external interface SwaggerUiOptions {
+    var customCss: String?
+    var customCssUrl: String?
+    var customSiteTitle: String?
+    var customfavIcon: String?
+    var displayRequestDuration: Boolean?
+    var validatorUrl: String?
+}
+
+/**
  * Represents the Swagger UI express module.
  */
 external interface SwaggerUi {
@@ -24,5 +36,5 @@ external interface SwaggerUi {
      * @param options The options for setting up Swagger UI.
      * @return A [RequestHandler].
      */
-    fun setup(swaggerDoc: OpenApiSpec, options: dynamic = definedExternally): RequestHandler
+    fun setup(swaggerDoc: OpenApiSpec, options: SwaggerUiOptions = definedExternally): RequestHandler
 }

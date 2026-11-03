@@ -56,12 +56,13 @@ The project follows a classic layered architecture (Controller-Service-Repositor
         *   `model/`: Domain models (e.g., `Contact`).
         *   `ports/`: Interfaces for external communication (Repository and Service ports).
         *   `service/`: Implementation of domain services (Business logic).
+        *   `exception/`: Domain exceptions (`NotFoundException`, `ConflictException`, `ValidationException`).
     *   `infrastructure/`: Technical implementation and external adapters.
         *   `database/`: MongoDB connection logic and Mongoose setup.
         *   `externals/`: **The core of interoperability.** Kotlin wrappers for JS libraries (Express, Mongoose, Node).
         *   `health/`: Health check implementations.
         *   `logging/`: Logging abstractions and implementations.
-        *   `persistence/`: Repository implementations and Mongoose schemas.
+        *   `persistence/`: Repository implementations, Mongoose schemas, and error mapping (`ErrorMapper.kt`).
         *   `web/`: Web layer abstraction and implementations.
             *   `WebAbstractions.kt`: Agnostic web server interfaces (`WebApplication`, `RoutingBuilder`).
             *   `ExpressImplementation.kt`: Express-specific implementation of the web abstractions.
@@ -71,8 +72,7 @@ The project follows a classic layered architecture (Controller-Service-Repositor
             *   `openapi/`: OpenAPI/Swagger integration (Plugin, Registry, and Models).
             *   `plugin/`: Infrastructure setup (DI, Database, App-wide middlewares).
             *   `HttpStatus.kt`: Type-safe HTTP status codes.
-            *   `Middleware.kt`: Web server middlewares.
-            *   `Exceptions.kt`: Custom web-related exceptions.
+            *   `Middleware.kt`: Web server middlewares and error handling.
 
 ## 🔍 How Interoperability Works (Kotlin ↔ JS)
 
@@ -195,7 +195,7 @@ This PoC identifies several areas where the development experience and code qual
 - [ ] **Automated Wrapper Generation:** Investigate tools to generate Kotlin external declarations from TypeScript Definition files (`.d.ts`) to significantly reduce manual effort in maintaining `infrastructure/externals` (e.g., Dukat or Karakum). This is the biggest barrier to entry today.
 - [ ] **Enhanced Type Safety:** Reduce the usage of `dynamic` types in the current Express/Mongoose wrappers by defining more strict external interfaces, potentially leveraging Kotlin's sealed classes.
 - [ ] **Standardized Serialization:** Create a unified abstraction for `JSON <-> Object` conversion to verify `encodeToDynamic`/`json()` calls are consistent and to handle edge cases (like `_id` generation or Date mapping) in a single place.
-- [ ] **Error Handling Interop:** Create standardized middleware to map Kotlin exceptions (like Konform validation errors or custom domain exceptions) automatically to structured Express JSON error responses.
+- [x] **Error Handling Interop:** Domain exceptions (`NotFoundException`, `ConflictException`, `ValidationException`) are handled by middleware that produces structured JSON error responses `{error, message, details[]}`. Mongoose errors are mapped via `mapMongooseError()` without using `dynamic` in the middleware.
 
 ### 🏗️ Architecture & Testing
 - [X] **Integration Testing (Testcontainers):** Expand the test suite to include integration tests that spin up a real MongoDB instance (e.g., via Testcontainers for Node) to verify the data access layer thoroughly.

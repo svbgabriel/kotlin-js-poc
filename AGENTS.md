@@ -52,7 +52,8 @@ src/jsMain/kotlin/io/github/svbgabriel/
 │   ├── ports/                  # Interfaces (Repository & Service ports)
 │   │   ├── repository/         # Repository interfaces
 │   │   └── service/            # Service interfaces
-│   └── service/                # Service implementations
+│   ├── service/                # Service implementations
+│   └── exception/              # Domain exceptions (NotFoundException, ConflictException, etc.)
 └── infrastructure/             # External adapters (outer circle)
     ├── config/                 # Environment variable mapping
     ├── database/               # MongoDB/Mongoose connection & plugins
@@ -131,8 +132,12 @@ src/jsMain/kotlin/io/github/svbgabriel/
 
 ### Exception Handling
 
-- Define custom exceptions for domain-specific errors (e.g., `BadRequestException`).
-- Let exceptions propagate through suspend functions; handle them at the web layer with middleware.
+- Domain exceptions live in `domain/exception/`: `DomainException` (base), `NotFoundException`, `ConflictException`, `ValidationException`.
+- `ValidationException` carries a `details: List<String>` for field-level error information from Konform validators.
+- All exceptions extend `DomainException`, which extends `RuntimeException`.
+- The web layer handles exceptions via middleware in `Middleware.kt`, mapping them to HTTP status codes and structured JSON responses.
+- Mongoose errors are mapped via `mapMongooseError()` in `infrastructure/persistence/ErrorMapper.kt`, converting them to typed `(HttpStatus, message, details)` tuples.
+- Error responses use a standard format: `{ "error": true, "message": "...", "details": [...] }` (details omitted when empty).
 - Use `companion object` constants for error messages in controllers.
 
 ---

@@ -1,6 +1,6 @@
 package io.github.svbgabriel.infrastructure.web.controller.validation
 
-import io.github.svbgabriel.infrastructure.web.BadRequestException
+import io.github.svbgabriel.domain.exception.ValidationException
 import io.github.svbgabriel.infrastructure.web.controller.dto.request.CreateContactRequest
 import io.github.svbgabriel.infrastructure.web.controller.dto.request.UpdateContactRequest
 import io.konform.validation.Validation
@@ -44,7 +44,7 @@ object ContactValidator {
             ?: emptyList()
 
         if (errors.isNotEmpty()) {
-            throw BadRequestException(errors.joinToString(", "))
+            throw ValidationException(errors.joinToString(", "), errors)
         }
     }
 

@@ -1,6 +1,6 @@
 package io.github.svbgabriel.infrastructure.web.controller.validation
 
-import io.github.svbgabriel.infrastructure.web.BadRequestException
+import io.github.svbgabriel.domain.exception.ValidationException
 import io.github.svbgabriel.infrastructure.web.controller.dto.request.CreateContactRequest
 import io.github.svbgabriel.infrastructure.web.controller.dto.request.UpdateContactRequest
 import io.kotest.assertions.throwables.shouldThrow
@@ -21,7 +21,7 @@ class ContactValidatorTest : FunSpec({
         ContactValidator.validate(request)
     }
 
-    test("should throw BadRequestException for CreateContactRequest with blank fields") {
+    test("should throw ValidationException for CreateContactRequest with blank fields") {
         // Arrange
         val request = CreateContactRequest(
             name = " ",
@@ -30,7 +30,7 @@ class ContactValidatorTest : FunSpec({
         )
 
         // Act
-        val exception = shouldThrow<BadRequestException> {
+        val exception = shouldThrow<ValidationException> {
             ContactValidator.validate(request)
         }
 
@@ -39,7 +39,7 @@ class ContactValidatorTest : FunSpec({
         exception.message shouldContain "nickname cannot be blank"
     }
 
-    test("should throw BadRequestException for CreateContactRequest with invalid email format") {
+    test("should throw ValidationException for CreateContactRequest with invalid email format") {
         // Arrange
         val request = CreateContactRequest(
             name = "Valid",
@@ -48,7 +48,7 @@ class ContactValidatorTest : FunSpec({
         )
 
         // Act
-        val exception = shouldThrow<BadRequestException> {
+        val exception = shouldThrow<ValidationException> {
             ContactValidator.validate(request)
         }
 
@@ -68,7 +68,7 @@ class ContactValidatorTest : FunSpec({
         ContactValidator.validate(request)
     }
 
-    test("should throw BadRequestException for UpdateContactRequest with blank fields and invalid email") {
+    test("should throw ValidationException for UpdateContactRequest with blank fields and invalid email") {
         // Arrange
         val request = UpdateContactRequest(
             name = "",
@@ -77,7 +77,7 @@ class ContactValidatorTest : FunSpec({
         )
 
         // Act
-        val exception = shouldThrow<BadRequestException> {
+        val exception = shouldThrow<ValidationException> {
             ContactValidator.validate(request)
         }
 

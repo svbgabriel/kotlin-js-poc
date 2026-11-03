@@ -41,7 +41,7 @@ object WebFactory {
             }
             onListen(server)
 
-            val shutdown: (dynamic, dynamic) -> Unit = { signal, _ ->
+            val shutdown: (Any?) -> Unit = { signal ->
                 logger.info { "Received $signal. Starting graceful shutdown..." }
                 scope.launch {
                     try {

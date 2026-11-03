@@ -1,5 +1,6 @@
 package io.github.svbgabriel.infrastructure.web
 
+import io.github.svbgabriel.domain.exception.ValidationException
 import io.github.svbgabriel.dotenv.Dotenv
 import io.github.svbgabriel.dotenv.DotenvOptions
 import io.github.svbgabriel.express.ExpressApplication
@@ -67,7 +68,7 @@ class ExpressContext(
         val hasNoContent = headers["content-length"] == "0" || headers["content-length"] == undefined
 
         if (isBodyUndefined || (isEmptyObject && hasNoContent)) {
-            throw BadRequestException("Request body is missing")
+            throw ValidationException("Request body is missing")
         }
 
         return jsonSerializer.decodeFromDynamic(serializer, body)
@@ -87,11 +88,20 @@ class ExpressContext(
         res.status(status.statusCode).send(null)
     }
 
-    override suspend fun respondError(status: HttpStatus, message: String) {
-        res.status(status.statusCode).json(kotlin.js.json(
-            "error" to true,
-            "message" to message
-        ))
+    override suspend fun respondError(status: HttpStatus, message: String, details: List<String>) {
+        val payload = if (details.isNotEmpty()) {
+            kotlin.js.json(
+                "error" to true,
+                "message" to message,
+                "details" to details.toTypedArray()
+            )
+        } else {
+            kotlin.js.json(
+                "error" to true,
+                "message" to message
+            )
+        }
+        res.status(status.statusCode).json(payload)
     }
 }
 
@@ -210,9 +220,15 @@ class ExpressWebApplication(
                     }
                 }
             }
+
+            override fun address(): AddressInfo {
+                val addr = server.address()
+                return object : AddressInfo {
+                    override val port: Int = addr.port
+                    override val address: String = addr.address
+                }
+            }
         }
-        val dynamicWebServer = webServer.asDynamic()
-        dynamicWebServer.address = { server.asDynamic().address() }
         return webServer
     }
 }

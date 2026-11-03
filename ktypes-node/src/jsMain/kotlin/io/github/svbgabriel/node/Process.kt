@@ -13,6 +13,11 @@ external val process: NodeProcess
 external interface NodeProcess {
     /**
      * An object containing the user environment.
+     * Shortcut for `process.env`.
+     *
+     * Note: Uses `dynamic` because `process.env` is a plain JS object that doesn't support
+     * method-based access (`.get()`/`.set()`). The `external interface` approach with operator
+     * get/set compiles to method calls, which fail at runtime.
      */
     val env: dynamic
 
@@ -24,10 +29,10 @@ external interface NodeProcess {
     /**
      * Adds the [listener] function to the end of the listener array for the event named [event].
      */
-    fun on(event: String, listener: (dynamic, dynamic) -> Unit)
+    fun on(event: String, listener: (Any?) -> Unit)
 
     /**
      * Adds a one-time [listener] function for the event named [event].
      */
-    fun once(event: String, listener: (dynamic, dynamic) -> Unit)
+    fun once(event: String, listener: (Any?) -> Unit)
 }
